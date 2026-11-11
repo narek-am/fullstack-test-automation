@@ -1,0 +1,32 @@
+node_modules/
+dist/
+coverage/
+target/
+*.log
+.DS_Store
+.idea/
+.vscode/
+*.iml
+
+# runtime data
+app/data/*.db
+app/data/*.db-*
+
+# test output
+reports/
+test-results/
+playwright-report/
+blob-report/
+cypress/videos/
+cypress/screenshots/
+**/cypress/videos/
+**/cypress/screenshots/
+pacts/
+logs/
+.lighthouseci/
+visual-tests/backstop/backstop_data/bitmaps_test/
+visual-tests/backstop/backstop_data/html_report/
+visual-tests/backstop/backstop_data/ci_report/
+performance-tests/jmeter/results/
+performance-tests/jmeter/report/
+.env
