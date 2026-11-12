@@ -62,6 +62,11 @@ pipeline {
                         dir('contract-tests') { sh 'npm ci && npm test' }
                     }
                 }
+                stage('Security tests') {
+                    steps {
+                        dir('security-tests') { sh 'npm ci && npm test -- --ci' }
+                    }
+                }
             }
         }
 

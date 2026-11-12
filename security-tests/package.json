@@ -1,0 +1,19 @@
+{
+  "name": "shoplite-security-tests",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Security tests for ShopLite: headers, authentication, access control, injection, input handling",
+  "scripts": {
+    "test": "jest"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^7.1.0"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "testMatch": [
+      "**/*.security.test.js"
+    ]
+  }
+}
