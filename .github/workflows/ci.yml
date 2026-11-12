@@ -388,6 +388,37 @@ jobs:
           path: e2e/playwright/playwright-report/
           retention-days: 7
 
+  cfr:
+    name: Chaos & architecture (Playwright, dependency-cruiser)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: |
+            app/package-lock.json
+            cfr-tests/package-lock.json
+      - run: npm ci --omit=dev
+        working-directory: app
+      - run: npm ci
+        working-directory: cfr-tests
+      - name: Architecture rules (dependency-cruiser)
+        run: npm run architecture
+        working-directory: cfr-tests
+      - run: npx playwright install --with-deps chromium
+        working-directory: cfr-tests
+      - name: Chaos experiments
+        run: npm run chaos
+        working-directory: cfr-tests
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chaos-report
+          path: cfr-tests/playwright-report/
+          retention-days: 7
+
   ui-playwright:
     name: UI (Playwright, 3 browsers)
     runs-on: ubuntu-latest

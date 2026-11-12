@@ -88,6 +88,11 @@ pipeline {
                         }
                     }
                 }
+                stage('Chaos & architecture') {
+                    steps {
+                        dir('cfr-tests') { sh 'npm ci && npm run architecture && npx playwright install chromium && npm run chaos' }
+                    }
+                }
                 stage('Pa11y') {
                     steps {
                         // Uses the agent's Google Chrome; set CHROME_PATH if it is not on the default path
