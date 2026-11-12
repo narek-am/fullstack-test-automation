@@ -64,7 +64,8 @@ the run page; a failing run posts the last error lines from the WebdriverIO and 
 annotation. The logs are also uploaded as an artifact.
 
 Getting it running in CI took three fixes, each found from those annotations:
-1. Appium 3 renamed the log option: `--log-file` became `--log`.
+1. Appium refused to start: the config passed `--log-file`, but Appium's option for a log file is
+   `--log`.
 2. WebdriverIO 9 wraps Linux workers in `xvfb-run` by default; the worker never started.
    A virtual display isn't needed when the browser runs on the device, so `autoXvfb` is off.
 3. The failure annotation first showed only error-looking lines; it now includes the last lines of
