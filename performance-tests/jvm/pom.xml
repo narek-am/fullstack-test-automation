@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.shoplite</groupId>
+    <artifactId>shoplite-load-tests</artifactId>
+    <version>1.0.0</version>
+    <name>ShopLite load tests (Gatling)</name>
+
+    <properties>
+        <maven.compiler.release>21</maven.compiler.release>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <gatling.version>3.16.0</gatling.version>
+        <gatling-maven-plugin.version>4.21.12</gatling-maven-plugin.version>
+        <!-- Where the app under test runs (start it with ../scripts/start-app.mjs) -->
+        <host>127.0.0.1</host>
+        <port>3400</port>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>io.gatling.highcharts</groupId>
+            <artifactId>gatling-charts-highcharts</artifactId>
+            <version>${gatling.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <testResources>
+            <!-- users.csv is shared with the other load tools, so it is read from ../data -->
+            <testResource>
+                <directory>../data</directory>
+            </testResource>
+        </testResources>
+        <plugins>
+            <!-- ./mvnw gatling:test -->
+            <plugin>
+                <groupId>io.gatling</groupId>
+                <artifactId>gatling-maven-plugin</artifactId>
+                <version>${gatling-maven-plugin.version}</version>
+                <configuration>
+                    <simulationClass>shoplite.perf.ShopperJourneySimulation</simulationClass>
+                    <jvmArgs>
+                        <jvmArg>-DbaseUrl=http://${host}:${port}</jvmArg>
+                    </jvmArgs>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

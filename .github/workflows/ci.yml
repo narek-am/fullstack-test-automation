@@ -272,6 +272,50 @@ jobs:
           path: zap/
           retention-days: 7
 
+  performance-load:
+    name: Performance (Apache Bench, Gatling)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+      - run: npm ci --omit=dev
+        working-directory: app
+      - name: Install Apache Bench
+        run: command -v ab || (sudo apt-get update -q && sudo apt-get install -y -q apache2-utils)
+      - name: Start ShopLite with load-test data
+        run: |
+          nohup node performance-tests/scripts/start-app.mjs 3400 > "$RUNNER_TEMP/app.log" 2>&1 &
+          curl -sSf --retry 30 --retry-delay 1 --retry-all-errors http://127.0.0.1:3400/api/health
+      # The three tools run one after another, so they don't compete for the runner's CPU.
+      - name: Apache Bench (single endpoints)
+        run: performance-tests/ab/benchmark.sh
+        env:
+          OUT: performance-tests/ab/results
+      - name: Gatling (open workload, visitors and buyers)
+        if: success() || failure()
+        run: ./mvnw -B gatling:test
+        working-directory: performance-tests/jvm
+      - name: App log
+        if: failure()
+        run: tail -n 100 "$RUNNER_TEMP/app.log"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: load-test-reports
+          path: |
+            performance-tests/ab/results/
+            performance-tests/jvm/target/gatling/
+          retention-days: 7
+
   ui-playwright:
     name: UI (Playwright, 3 browsers)
     runs-on: ubuntu-latest
