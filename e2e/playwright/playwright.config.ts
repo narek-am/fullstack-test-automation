@@ -57,6 +57,9 @@ export default defineConfig({
         ...devices['Desktop Chrome'],
         baseURL: `http://127.0.0.1:${VISUAL_PORT}`,
         viewport: { width: 1280, height: 900 },
+        // ShopLite's CSP blocks inline styles, including the stylePath CSS that Playwright injects.
+        // Only this screenshot project bypasses it; the functional projects keep the real CSP.
+        bypassCSP: true,
       },
     },
   ],
