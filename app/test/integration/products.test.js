@@ -51,6 +51,11 @@ describe('Products API', () => {
     ['/api/products/abc', 400],
     ['/api/products/0', 400],
     ['/api/products?sort=random', 400],
+    // Found by the security tests: these used to crash with 500.
+    ['/api/products?search=a&search=b', 400],
+    ['/api/products?category=books&category=merch', 400],
+    ['/api/products?sort=constructor', 400],
+    ['/api/products?sort=toString', 400],
   ])('GET %s -> %i', async (url, status) => {
     await request(app).get(url).expect(status);
   });

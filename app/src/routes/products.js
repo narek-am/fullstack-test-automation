@@ -19,10 +19,22 @@ module.exports = function productRoutes({ db, authenticateUser, requireAdmin }) 
   const router = express.Router();
   const SORTS = { name: 'name ASC', price_asc: 'price_cents ASC', price_desc: 'price_cents DESC' };
 
+  // `?search=a&search=b` arrives as an array, which SQLite can't bind. Accept exactly one text value.
+  function singleQueryValue(query, field, fallback) {
+    const value = query[field] ?? fallback;
+    if (typeof value !== 'string') throw new ValidationError(`${field} must be given once, as text`, field);
+    return value;
+  }
+
   router.get('/', (req, res) => {
-    const { search = '', category = '', sort = 'name' } = req.query;
-    if (!SORTS[sort]) throw new ValidationError(`sort must be one of ${Object.keys(SORTS).join(', ')}`, 'sort');
-    if (String(search).length > 100) throw new ValidationError('search is too long', 'search');
+    const search = singleQueryValue(req.query, 'search', '');
+    const category = singleQueryValue(req.query, 'category', '');
+    const sort = singleQueryValue(req.query, 'sort', 'name');
+    // Object.hasOwn, not SORTS[sort]: `sort=constructor` would otherwise find an inherited property.
+    if (!Object.hasOwn(SORTS, sort)) {
+      throw new ValidationError(`sort must be one of ${Object.keys(SORTS).join(', ')}`, 'sort');
+    }
+    if (search.length > 100) throw new ValidationError('search is too long', 'search');
     // Parameterised query: user input never ends up in the SQL text.
     const rows = db
       .prepare(
