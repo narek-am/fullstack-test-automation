@@ -84,13 +84,18 @@ test.describe('Components', () => {
 });
 
 test.describe('Interaction states of the primary button', () => {
+  // These images are tiny and mostly text, so font anti-aliasing differs by up to ~60 pixels
+  // between macOS versions (measured on the CI runner: 57). Real regressions are far larger:
+  // removing the focus ring changes 588 pixels, a hover colour change affects the whole button.
+  const smallUi = { maxDiffPixels: 100 };
+
   test('default, hover, keyboard focus and disabled', async ({ page, productPage }) => {
     await productPage.goto(1);
     const button = productPage.addToCartButton;
-    await expect(button).toHaveScreenshot('button-default.png');
+    await expect(button).toHaveScreenshot('button-default.png', smallUi);
 
     await button.hover();
-    await expect(button).toHaveScreenshot('button-hover.png');
+    await expect(button).toHaveScreenshot('button-hover.png', smallUi);
 
     await page.mouse.move(0, 0);
     await productPage.quantity.focus();
@@ -98,10 +103,10 @@ test.describe('Interaction states of the primary button', () => {
     await expect(button).toBeFocused();
     // The focus outline is drawn outside the button (outline-offset), so capture the whole form:
     // a screenshot of the button alone would crop the outline away.
-    await expect(page.getByTestId('add-to-cart-form')).toHaveScreenshot('button-focus-visible.png');
+    await expect(page.getByTestId('add-to-cart-form')).toHaveScreenshot('button-focus-visible.png', smallUi);
 
     await productPage.goto(6); // sold out
     await expect(productPage.addToCartButton).toBeDisabled();
-    await expect(productPage.addToCartButton).toHaveScreenshot('button-disabled.png');
+    await expect(productPage.addToCartButton).toHaveScreenshot('button-disabled.png', smallUi);
   });
 });
