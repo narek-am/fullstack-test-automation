@@ -13,6 +13,11 @@ const functional = [
 const VISUAL_PORT = 3104;
 // Accessibility checks (axe-core and keyboard tests) run in Chromium on their own instance.
 const A11Y_PORT = 3105;
+// Phone emulation: an Android phone in Chromium and an iPhone in WebKit, each with its own app.
+const mobile = [
+  { name: 'mobile-android', port: 3106, use: devices['Pixel 7'] },
+  { name: 'mobile-ios', port: 3107, use: devices['iPhone 14'] },
+];
 
 export default defineConfig({
   fullyParallel: true,
@@ -67,8 +72,13 @@ export default defineConfig({
       testDir: './a11y',
       use: { ...devices['Desktop Chrome'], baseURL: `http://127.0.0.1:${A11Y_PORT}` },
     },
+    ...mobile.map(({ name, port, use }) => ({
+      name,
+      testDir: './mobile',
+      use: { ...use, baseURL: `http://127.0.0.1:${port}` },
+    })),
   ],
-  webServer: [...functional.map(({ port }) => port), VISUAL_PORT, A11Y_PORT].map((port) => ({
+  webServer: [...functional.map(({ port }) => port), VISUAL_PORT, A11Y_PORT, ...mobile.map(({ port }) => port)].map((port) => ({
     command: `node scripts/start-app.mjs ${port}`,
     url: `http://127.0.0.1:${port}/api/health`,
     reuseExistingServer: !process.env.CI,

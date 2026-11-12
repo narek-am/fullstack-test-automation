@@ -12,7 +12,8 @@
     "typecheck": "tsc --noEmit",
     "test:visual": "playwright test --project=visual",
     "test:visual:update": "playwright test --project=visual --update-snapshots",
-    "test:a11y": "playwright test --project=a11y"
+    "test:a11y": "playwright test --project=a11y",
+    "test:mobile": "playwright test --project=mobile-android --project=mobile-ios"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.14.0",
