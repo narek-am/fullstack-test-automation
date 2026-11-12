@@ -1,4 +1,4 @@
-/* Applied by Playwright while taking screenshots (playwright.config.ts: toHaveScreenshot.stylePath).
+/* Injected into every page of the visual tests before it loads (pages.visual.spec.ts, beforeEach).
    Whether the scrollbar takes up space depends on the machine: macOS hides it when a trackpad is
    used and shows it with a mouse, as on the CI runner. The app reserves that space with
    scrollbar-gutter: stable, so screenshots turn the gutter off to be the same everywhere. */

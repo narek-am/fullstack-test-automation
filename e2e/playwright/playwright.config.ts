@@ -26,8 +26,6 @@ export default defineConfig({
       scale: 'css',
       // Per-pixel colour tolerance only; the number of differing pixels must be zero.
       threshold: 0.2,
-      // Makes screenshots independent of the machine's scrollbar style (see the file).
-      stylePath: './visual/screenshot.css',
     },
   },
   snapshotPathTemplate: '{testDir}/__screenshots__/{testFilePath}/{arg}{-projectName}{-platform}{ext}',
@@ -57,7 +55,7 @@ export default defineConfig({
         ...devices['Desktop Chrome'],
         baseURL: `http://127.0.0.1:${VISUAL_PORT}`,
         viewport: { width: 1280, height: 900 },
-        // ShopLite's CSP blocks inline styles, including the stylePath CSS that Playwright injects.
+        // ShopLite's CSP blocks inline styles, including visual/screenshot.css injected by the tests.
         // Only this screenshot project bypasses it; the functional projects keep the real CSP.
         bypassCSP: true,
       },

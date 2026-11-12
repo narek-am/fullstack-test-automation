@@ -1,5 +1,22 @@
 import { test, expect } from '../support/fixtures';
 import { users } from '../support/users';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+
+// Layout must not depend on the machine's scrollbar style (see screenshot.css). The CSS is added as
+// the page loads, so positions measured in a test (like the focus-ring clip box below) match what
+// is captured. Playwright's stylePath option applies CSS only at capture time, after measuring,
+// which moved the button out of its clip box on CI. Needs bypassCSP (set in playwright.config.ts).
+const screenshotCss = readFileSync(join(__dirname, 'screenshot.css'), 'utf8');
+test.beforeEach(async ({ page }) => {
+  await page.addInitScript((css) => {
+    document.addEventListener('DOMContentLoaded', () => {
+      const style = document.createElement('style');
+      style.textContent = css;
+      document.head.append(style);
+    });
+  }, screenshotCss);
+});
 
 // Full-page and component screenshots compared with approved baselines in __screenshots__/.
 // BackstopJS (visual-tests/backstop) covers whole pages per viewport; these tests focus on
