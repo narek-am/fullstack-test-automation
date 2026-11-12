@@ -1,0 +1,18 @@
+{
+  "name": "shoplite-backstop-visual-tests",
+  "version": "1.0.0",
+  "private": true,
+  "description": "BackstopJS visual regression tests for ShopLite pages across viewports",
+  "scripts": {
+    "start:app": "node scripts/start-app.mjs 3301",
+    "backstop:test": "backstop test --config=backstop.config.js",
+    "backstop:reference": "backstop reference --config=backstop.config.js",
+    "backstop:approve": "backstop approve --config=backstop.config.js",
+    "test": "start-server-and-test start:app http://127.0.0.1:3301/api/health backstop:test",
+    "reference": "start-server-and-test start:app http://127.0.0.1:3301/api/health backstop:reference"
+  },
+  "devDependencies": {
+    "backstopjs": "^6.3.25",
+    "start-server-and-test": "^2.0.9"
+  }
+}

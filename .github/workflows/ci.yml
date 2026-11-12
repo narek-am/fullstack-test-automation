@@ -210,3 +210,33 @@ jobs:
           name: cypress-screenshots
           path: e2e/cypress/cypress/screenshots/
           retention-days: 7
+
+  visual-backstop:
+    name: Visual (BackstopJS)
+    # Reference images were made on macOS; font rendering differs on Linux.
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: |
+            app/package-lock.json
+            visual-tests/backstop/package-lock.json
+      - run: npm ci
+        working-directory: app
+      - run: npm ci
+        working-directory: visual-tests/backstop
+        env:
+          PUPPETEER_SKIP_DOWNLOAD: "true"
+      - run: npm test
+        working-directory: visual-tests/backstop
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: backstop-report
+          path: |
+            visual-tests/backstop/backstop_data/html_report/
+            visual-tests/backstop/backstop_data/bitmaps_test/
+          retention-days: 7
