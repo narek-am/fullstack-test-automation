@@ -74,7 +74,10 @@ The first history scan failed on low-severity name heuristics only: `passwords.t
 files (which would also hide a real key added to them later), `.talismanrc` sets
 `threshold: medium`. Low-severity matches are reported as warnings; keys, tokens, private key
 files, high-entropy strings and the custom patterns stay high severity and fail the build.
-`.env` files are raised to high, because a committed `.env` usually holds real secrets.
+Talisman rates a committed `.env` file as low severity, and its `custom_severities` setting does
+not apply to file-name rules (verified in the v1.37.0 source: those severities are fixed when the
+program starts). So `static/repository.security.test.js` checks `git ls-files` directly: no
+`.env` files, databases, private keys or `.npmrc` may be tracked.
 
 ## OWASP ZAP baseline scan (CI job `security-zap`)
 
