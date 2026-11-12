@@ -1,0 +1,16 @@
+{
+  "name": "shoplite-cypress-tests",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cypress UI tests for ShopLite, focused on network stubbing and custom commands",
+  "scripts": {
+    "start:app": "node scripts/start-app.mjs 3201",
+    "cy:run": "cypress run --browser chrome",
+    "cy:open": "cypress open",
+    "test": "start-server-and-test start:app http://127.0.0.1:3201/api/health cy:run"
+  },
+  "devDependencies": {
+    "cypress": "^13.17.0",
+    "start-server-and-test": "^2.0.9"
+  }
+}

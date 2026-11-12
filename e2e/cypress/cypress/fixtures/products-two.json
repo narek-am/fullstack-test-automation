@@ -1,0 +1,27 @@
+{
+  "total": 2,
+  "items": [
+    {
+      "id": 101,
+      "sku": "FX-001",
+      "name": "Stubbed Notebook",
+      "description": "Comes from a fixture, not the database.",
+      "category": "books",
+      "priceCents": 999,
+      "stock": 7,
+      "inStock": true,
+      "image": "/img/book.svg"
+    },
+    {
+      "id": 102,
+      "sku": "FX-002",
+      "name": "Stubbed Sticker Pack",
+      "description": "Also from a fixture.",
+      "category": "merch",
+      "priceCents": 450,
+      "stock": 0,
+      "inStock": false,
+      "image": "/img/mug.svg"
+    }
+  ]
+}
