@@ -340,6 +340,9 @@ jobs:
       # Uses the Google Chrome that is preinstalled on the runner.
       - run: npm run lighthouse
         working-directory: performance-tests
+      - name: Report Lighthouse results
+        if: always()
+        run: node performance-tests/scripts/lighthouse-summary.mjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:
