@@ -16,9 +16,11 @@ for (const file of files) {
     .split('\n')
     .filter((line) => interesting.test(line))
     .map((line) => line.replace(/\x1b\[[0-9;]*m/g, '').trim().slice(0, 300));
-  // The last distinct lines are usually the ones that explain the failure.
-  const distinct = [...new Set(matches)].slice(-15);
-  if (distinct.length) lines.push(`== ${file.slice(root.length + 1)}`, ...distinct);
+  // The last distinct error lines usually explain the failure; the last lines of the file show
+  // where it stopped when nothing looks like an error.
+  const distinct = [...new Set(matches)].slice(-12);
+  const tail = readFileSync(file, 'utf8').trimEnd().split('\n').slice(-6).map((line) => line.replace(/\x1b\[[0-9;]*m/g, '').trim().slice(0, 300));
+  lines.push(`== ${file.slice(root.length + 1)}`, ...distinct, '-- last lines:', ...tail);
 }
 
 const message = lines.length ? lines.join('\n') : `No error lines found in: ${files.map((f) => f.slice(root.length + 1)).join(', ') || 'no log files'}`;
