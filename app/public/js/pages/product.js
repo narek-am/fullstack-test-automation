@@ -3,6 +3,7 @@ import { initLayout, refreshCartCount, requireLogin, showMessage } from '../layo
 
 const $ = (id) => document.querySelector(`[data-testid="${id}"]`);
 const id = new URLSearchParams(window.location.search).get('id');
+let inStock = false;
 
 async function load() {
   try {
@@ -16,7 +17,8 @@ async function load() {
     $('product-image').src = product.image;
     $('product-image').alt = product.name;
     $('quantity-input').max = String(Math.max(product.stock, 1));
-    $('add-to-cart').disabled = !product.inStock;
+    inStock = product.inStock;
+    $('add-to-cart').disabled = !inStock;
     $('product-detail').classList.remove('hidden');
   } catch (err) {
     showMessage(err.status === 404 || err.status === 400 ? 'Product not found.' : `Error: ${err.message}`);
@@ -26,12 +28,18 @@ async function load() {
 $('add-to-cart-form').addEventListener('submit', async (event) => {
   event.preventDefault();
   if (!requireLogin()) return;
+  // Disabled while the request runs, so a double click on a slow connection adds the item once
+  // (found by the slow-API chaos experiment).
+  const button = $('add-to-cart');
+  button.disabled = true;
   try {
     await api('/cart/items', { method: 'POST', body: { productId: Number(id), quantity: Number($('quantity-input').value) } });
     showMessage('Added to cart.', 'success');
     await refreshCartCount();
   } catch (err) {
     showMessage(err.message);
+  } finally {
+    button.disabled = !inStock;
   }
 });
 

@@ -76,11 +76,14 @@ async function removeItem(productId) {
 }
 
 $('checkout-button').addEventListener('click', async () => {
+  const button = $('checkout-button');
+  button.disabled = true; // one click, one order attempt, however slow the server is
   try {
     const order = await api('/orders', { method: 'POST' });
     window.location.href = `/orders?placed=${order.id}`;
   } catch (err) {
     showMessage(err.message);
+    button.disabled = false;
   }
 });
 
