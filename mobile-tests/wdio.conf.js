@@ -36,7 +36,7 @@ exports.config = {
     [
       'appium',
       {
-        args: { allowInsecure: 'uiautomator2:chromedriver_autodownload', logFile: './appium.log' },
+        args: { allowInsecure: 'uiautomator2:chromedriver_autodownload', log: './appium.log' },
       },
     ],
   ],
