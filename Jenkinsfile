@@ -65,6 +65,8 @@ pipeline {
                 stage('Security tests') {
                     steps {
                         dir('security-tests') { sh 'npm ci && npm test -- --ci' }
+                        // Fails only if production dependencies have known vulnerabilities
+                        sh 'node security-tests/scripts/npm-audit-report.mjs'
                     }
                 }
             }

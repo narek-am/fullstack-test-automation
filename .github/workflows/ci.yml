@@ -233,6 +233,42 @@ jobs:
           path: talisman_report/
           retention-days: 7
 
+  security-zap:
+    name: Security (OWASP ZAP baseline)
+    runs-on: ubuntu-latest
+    env:
+      ZAP_IMAGE: zaproxy/zap-stable:2.17.0
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+      - run: npm ci --omit=dev
+        working-directory: app
+      - name: Start ShopLite
+        run: |
+          PORT=3000 DB_PATH="$RUNNER_TEMP/zap.db" nohup node app/src/index.js > "$RUNNER_TEMP/app.log" 2>&1 &
+          curl -sSf --retry 20 --retry-delay 1 --retry-all-errors http://localhost:3000/api/health
+      # Passive scan only: ZAP spiders the site (including JS-rendered links) and inspects every
+      # response, but sends no attacks. -I: warnings are reported; only FAIL rules break the build.
+      - name: ZAP baseline scan
+        run: |
+          mkdir -p zap && cp security-tests/zap/rules.tsv zap/ && chmod -R a+rwX zap
+          docker run --rm --network host -v "$PWD/zap:/zap/wrk:rw" "$ZAP_IMAGE" \
+            zap-baseline.py -t http://localhost:3000 -j -m 2 -I \
+              -c rules.tsv -r zap-report.html -J zap-report.json
+      - name: Summarise ZAP findings
+        if: always()
+        run: node security-tests/zap/summarize.mjs zap/zap-report.json security-tests/zap/rules.tsv
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: zap-report
+          path: zap/
+          retention-days: 7
+
   ui-playwright:
     name: UI (Playwright, 3 browsers)
     runs-on: ubuntu-latest

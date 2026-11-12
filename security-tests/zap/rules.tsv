@@ -1,0 +1,19 @@
+# ZAP baseline rules for ShopLite: <rule id> TAB <IGNORE|INFO|WARN|FAIL> TAB (<name>)
+# FAIL = something ShopLite already protects against, so a finding means a regression.
+# IGNORE = not applicable to this app; the reason is in security-tests/README.md.
+# Rules not listed here are reported as warnings and do not fail the build.
+10020	FAIL	(Missing Anti-clickjacking Header)
+10021	FAIL	(X-Content-Type-Options Header Missing)
+10038	FAIL	(Content Security Policy (CSP) Header Not Set)
+10055	FAIL	(CSP)
+10063	FAIL	(Permissions Policy Header Not Set)
+10037	FAIL	(Server Leaks Information via X-Powered-By)
+10036	FAIL	(Server Leaks Version Information via Server header)
+10098	FAIL	(Cross-Domain Misconfiguration)
+10017	FAIL	(Cross-Domain JavaScript Source File Inclusion)
+10019	FAIL	(Content-Type Header Missing)
+10040	FAIL	(Secure Pages Include Mixed Content)
+10110	FAIL	(Dangerous JS Functions)
+10035	IGNORE	(Strict-Transport-Security Header Not Set)
+10202	IGNORE	(Absence of Anti-CSRF Tokens)
+10109	IGNORE	(Modern Web Application)

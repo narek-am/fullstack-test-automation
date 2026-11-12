@@ -30,3 +30,8 @@ visual-tests/backstop/backstop_data/ci_report/
 performance-tests/jmeter/results/
 performance-tests/jmeter/report/
 .env
+
+# Security scan output (CI)
+/zap/
+talisman_report/
+osv-report.*

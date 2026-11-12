@@ -8,6 +8,7 @@ Security checks for ShopLite, organised by the threats in [`docs/threat-model.md
 | Frontend source | Jest (static checks) | Dangerous DOM sinks, inline scripts and handlers |
 | Dependencies | npm audit, OSV-Scanner | Known vulnerabilities in npm and Maven dependencies |
 | Secrets | Talisman | Keys, tokens and other secrets in commits |
+| Running app (black box) | OWASP ZAP baseline | Passive scan of every page and response |
 
 ## Run
 
@@ -67,6 +68,30 @@ private key files, tokens, high-entropy strings and the extra patterns in
 
 The demo accounts' passwords are allowed explicitly in `.talismanrc`: they are seeded test data,
 documented on purpose so the suites can log in.
+
+## OWASP ZAP baseline scan (CI job `security-zap`)
+
+CI starts ShopLite and runs the [ZAP baseline scan](https://www.zaproxy.org/docs/docker/baseline-scan/)
+against it in Docker. The scan is **passive**: ZAP crawls the site (including links that only
+exist after JavaScript runs) and inspects every response, but sends no attacks, so it is safe
+to run on every push. The HTML report is uploaded as an artifact and the findings appear in the
+job summary.
+
+[`zap/rules.tsv`](zap/rules.tsv) decides what each finding means:
+
+- **FAIL** for protections ShopLite already has (CSP, anti-clickjacking, `nosniff`,
+  Permissions-Policy, no CORS, no version banners, no dangerous JS functions). A finding here is a
+  regression, so the build fails.
+- **IGNORE** for rules that don't apply, each with a reason:
+  - *10035 Strict-Transport-Security*: the scan runs over plain HTTP on localhost; HSTS belongs to
+    the TLS-terminating proxy in a real deployment.
+  - *10202 Absence of Anti-CSRF Tokens*: ShopLite authenticates with a bearer token in the
+    `Authorization` header, not cookies, so a cross-site form post carries no credentials.
+  - *10109 Modern Web Application*: informational only ("this site uses JavaScript").
+- Everything else is reported as a **warning** to review.
+
+The API tests above check the same headers in-process on every request type; ZAP is the
+independent, black-box check of the running app.
 
 ## Bugs these tests found
 
