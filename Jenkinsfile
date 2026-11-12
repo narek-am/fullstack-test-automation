@@ -51,6 +51,11 @@ pipeline {
                         always { junit allowEmptyResults: true, testResults: 'java-tests/target/surefire-reports/*.xml' }
                     }
                 }
+                stage('Data quality') {
+                    steps {
+                        dir('data-tests') { sh 'npm ci && npm test -- --ci' }
+                    }
+                }
                 stage('Pact') {
                     steps {
                         dir('contract-tests') { sh 'npm ci && npm test' }

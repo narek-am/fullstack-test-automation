@@ -36,6 +36,25 @@ jobs:
           path: app/coverage/
           retention-days: 7
 
+  data-quality:
+    name: Data quality (SQL checks)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: |
+            app/package-lock.json
+            data-tests/package-lock.json
+      - run: npm ci
+        working-directory: app
+      - run: npm ci
+        working-directory: data-tests
+      - run: npm test -- --ci
+        working-directory: data-tests
+
   api-postman:
     name: API (Postman + Newman)
     runs-on: ubuntu-latest
@@ -62,7 +81,7 @@ jobs:
           retention-days: 7
 
   api-java:
-    name: API (REST Assured + Karate)
+    name: API + data (REST Assured, Karate, JDBC)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

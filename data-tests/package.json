@@ -1,0 +1,17 @@
+{
+  "name": "shoplite-data-tests",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Data quality and data integrity tests for the ShopLite database",
+  "scripts": {
+    "test": "jest",
+    "check": "node run-checks.js"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^7.1.0"
+  },
+  "jest": {
+    "testEnvironment": "node"
+  }
+}

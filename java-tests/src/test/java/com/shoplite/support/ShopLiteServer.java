@@ -10,6 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.util.Comparator;
+import java.util.Optional;
 
 /**
  * Gives the tests a running ShopLite instance.
@@ -23,6 +24,7 @@ public final class ShopLiteServer {
     private static String baseUrl;
     private static Process process;
     private static Path tempDir;
+    private static Path dbPath;
 
     private ShopLiteServer() {
     }
@@ -33,6 +35,15 @@ public final class ShopLiteServer {
             baseUrl = (configured != null && !configured.isBlank()) ? configured.replaceAll("/$", "") : start();
         }
         return baseUrl;
+    }
+
+    /**
+     * The SQLite file of the instance started by this class, for JDBC data checks.
+     * Empty when the tests run against an external instance (-Dshoplite.baseUrl).
+     */
+    public static synchronized Optional<Path> dbPath() {
+        baseUrl();
+        return Optional.ofNullable(dbPath);
     }
 
     private static String start() {
@@ -46,7 +57,8 @@ public final class ShopLiteServer {
                     .redirectErrorStream(true)
                     .redirectOutput(tempDir.resolve("server.log").toFile());
             builder.environment().put("PORT", String.valueOf(port));
-            builder.environment().put("DB_PATH", tempDir.resolve("test.db").toString());
+            dbPath = tempDir.resolve("test.db");
+            builder.environment().put("DB_PATH", dbPath.toString());
             // Tests log in a lot; rate limiting has its own dedicated tests.
             builder.environment().put("LOGIN_RATE_LIMIT", "10000");
             process = builder.start();

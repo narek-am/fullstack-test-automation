@@ -19,6 +19,7 @@
         <assertj.version>3.26.3</assertj.version>
         <jackson.version>2.18.2</jackson.version>
         <karate.version>1.5.0</karate.version>
+        <sqlite-jdbc.version>3.47.1.0</sqlite-jdbc.version>
 
         <!-- Which JUnit tags to run, e.g. -Dgroups=api -->
         <groups></groups>
@@ -53,6 +54,12 @@
             <groupId>io.karatelabs</groupId>
             <artifactId>karate-junit5</artifactId>
             <version>${karate.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.xerial</groupId>
+            <artifactId>sqlite-jdbc</artifactId>
+            <version>${sqlite-jdbc.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>

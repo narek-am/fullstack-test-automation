@@ -6,6 +6,7 @@ Maven project with the JVM-based test suites for ShopLite.
 |---------|------|-----|
 | `com.shoplite.api` | REST Assured + JUnit 5 + AssertJ | `api` |
 | `com.shoplite.karate` | Karate (BDD-style `.feature` files) | `karate` |
+| `com.shoplite.data` | JDBC (sqlite-jdbc) + REST Assured: API actions verified in the database | `data` |
 
 ## How the app is started
 
@@ -25,6 +26,7 @@ Requires JDK 21 and Node.js (with `npm install` done in `../app`).
 ./mvnw test                 # everything
 ./mvnw test -Dgroups=api    # only REST Assured tests
 ./mvnw test -Dgroups=karate # only Karate features
+./mvnw test -Dgroups=data   # only JDBC data checks
 ```
 
 Reports: `target/surefire-reports/` and, for Karate, `target/karate-reports/karate-summary.html`.
