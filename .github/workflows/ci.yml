@@ -55,6 +55,26 @@ jobs:
       - run: npm test -- --ci
         working-directory: data-tests
 
+  data-kafka:
+    name: Data (Kafka events, Testcontainers)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: |
+            app/package-lock.json
+            data-tests/package-lock.json
+      - run: npm ci
+        working-directory: app
+      - run: npm ci
+        working-directory: data-tests
+      # No KAFKA_BROKERS set: the test starts its own Kafka container (Docker is available on the runner).
+      - run: npm run test:kafka -- --ci
+        working-directory: data-tests
+
   api-postman:
     name: API (Postman + Newman)
     runs-on: ubuntu-latest

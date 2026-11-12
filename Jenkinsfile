@@ -53,7 +53,8 @@ pipeline {
                 }
                 stage('Data quality') {
                     steps {
-                        dir('data-tests') { sh 'npm ci && npm test -- --ci' }
+                        // Kafka tests start a Kafka container with Testcontainers (Docker needed on the agent)
+                        dir('data-tests') { sh 'npm ci && npm test -- --ci && npm run test:kafka -- --ci' }
                     }
                 }
                 stage('Pact') {

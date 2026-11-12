@@ -24,6 +24,12 @@
   },
   "jest": {
     "testEnvironment": "node",
-    "collectCoverageFrom": ["src/**/*.js", "!src/index.js"]
+    "collectCoverageFrom": [
+      "src/**/*.js",
+      "!src/index.js"
+    ]
+  },
+  "optionalDependencies": {
+    "kafkajs": "^2.2.4"
   }
 }

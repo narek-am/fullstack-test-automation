@@ -25,9 +25,11 @@ class EventBus extends EventEmitter {
 async function createKafkaPublisher(brokers, topic = 'shoplite.orders') {
   // kafkajs is an optional dependency: only needed when KAFKA_BROKERS is set.
   // eslint-disable-next-line global-require
-  const { Kafka } = require('kafkajs');
+  const { Kafka, Partitioners } = require('kafkajs');
   const kafka = new Kafka({ clientId: 'shoplite', brokers: brokers.split(',') });
-  const producer = kafka.producer();
+  // Default (murmur2) partitioner, same as the Java client: messages with the same key
+  // always go to the same partition.
+  const producer = kafka.producer({ createPartitioner: Partitioners.DefaultPartitioner });
   await producer.connect();
   return {
     async publish(event) {

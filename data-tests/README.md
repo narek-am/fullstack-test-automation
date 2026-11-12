@@ -39,3 +39,23 @@ node run-checks.js path/to/shoplite.db   # run the checks against any ShopLite d
 (REST Assured) and verifies the stored rows over a **read-only JDBC connection**: order header and
 lines, stock decrement, cart cleared, rollback on failed checkout, hashed passwords.
 Run with `./mvnw test -Dgroups=data` in `java-tests/`.
+
+## Kafka event tests (`kafka/`)
+
+When an order is placed, ShopLite publishes an `order.created` event (`app/src/services/events.js`).
+`orderEvents.kafka.test.js` wires the real app to a real Kafka broker, places orders through the API
+and consumes the topic to check:
+
+- exactly one message per order, keyed by order id
+- the message body (type, ISO timestamp, order id, user id, total, lines) matches the stored order
+- no personal data (emails, passwords) in the event
+- no event for a failed checkout
+- the event total follows the pricing rules
+
+The broker comes from **Testcontainers** (`@testcontainers/kafka`, single-node KRaft) unless
+`KAFKA_BROKERS` points at an existing one:
+
+```bash
+npm run test:kafka                                  # needs Docker
+KAFKA_BROKERS=localhost:9092 npm run test:kafka     # use a broker that is already running
+```
