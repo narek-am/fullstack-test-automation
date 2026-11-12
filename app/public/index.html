@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="ShopLite - a small demo shop used for test automation.">
+  <title>Products | ShopLite</title>
+  <link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/css/styles.css">
+  <script type="module" src="/js/pages/products.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header">
+    <a class="brand" href="/" data-testid="brand">ShopLite</a>
+    <nav class="site-nav" aria-label="Main">
+      <ul>
+        <li><a href="/" data-testid="nav-products">Products</a></li>
+        <li class="hidden"><a href="/orders" data-testid="nav-orders">My orders</a></li>
+        <li><a href="/cart" data-testid="nav-cart">Cart <span class="cart-count" data-testid="cart-count" aria-label="items in cart">0</span></a></li>
+        <li><a href="/login" data-testid="nav-login">Log in</a></li>
+        <li class="hidden"><span data-testid="nav-greeting"></span> <button type="button" class="button link" data-testid="nav-logout">Log out</button></li>
+      </ul>
+    </nav>
+  </header>
+  <main id="main" tabindex="-1">
+    <p class="alert" role="alert" data-testid="message"></p>
+    <h1>Products</h1>
+    <form class="filters" data-testid="filters" role="search">
+      <div class="field">
+        <label for="search">Search</label>
+        <input id="search" name="search" type="search" maxlength="100" placeholder="e.g. mug" data-testid="search-input">
+      </div>
+      <div class="field">
+        <label for="category">Category</label>
+        <select id="category" name="category" data-testid="category-select">
+          <option value="">All categories</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="sort">Sort by</label>
+        <select id="sort" name="sort" data-testid="sort-select">
+          <option value="name">Name</option>
+          <option value="price_asc">Price: low to high</option>
+          <option value="price_desc">Price: high to low</option>
+        </select>
+      </div>
+      <button class="button" type="submit" data-testid="search-button">Apply</button>
+    </form>
+    <p class="muted" aria-live="polite" data-testid="result-count"></p>
+    <ul class="grid" data-testid="product-list"></ul>
+  </main>
+  <footer class="site-footer">
+    <p>ShopLite is a demo application for test automation practice. No real orders are placed.</p>
+  </footer>
+</body>
+</html>

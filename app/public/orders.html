@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="ShopLite - a small demo shop used for test automation.">
+  <title>My orders | ShopLite</title>
+  <link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/css/styles.css">
+  <script type="module" src="/js/pages/orders.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header">
+    <a class="brand" href="/" data-testid="brand">ShopLite</a>
+    <nav class="site-nav" aria-label="Main">
+      <ul>
+        <li><a href="/" data-testid="nav-products">Products</a></li>
+        <li class="hidden"><a href="/orders" data-testid="nav-orders">My orders</a></li>
+        <li><a href="/cart" data-testid="nav-cart">Cart <span class="cart-count" data-testid="cart-count" aria-label="items in cart">0</span></a></li>
+        <li><a href="/login" data-testid="nav-login">Log in</a></li>
+        <li class="hidden"><span data-testid="nav-greeting"></span> <button type="button" class="button link" data-testid="nav-logout">Log out</button></li>
+      </ul>
+    </nav>
+  </header>
+  <main id="main" tabindex="-1">
+    <p class="alert" role="alert" data-testid="message"></p>
+    <h1>My orders</h1>
+    <p class="hidden" data-testid="orders-empty">You have not placed any orders yet.</p>
+    <table class="hidden" data-testid="orders-table">
+      <thead>
+        <tr><th scope="col">Order</th><th scope="col">Status</th><th scope="col">Items</th><th scope="col">Total</th></tr>
+      </thead>
+      <tbody data-testid="orders-list"></tbody>
+    </table>
+  </main>
+  <footer class="site-footer">
+    <p>ShopLite is a demo application for test automation practice. No real orders are placed.</p>
+  </footer>
+</body>
+</html>

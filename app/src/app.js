@@ -41,8 +41,9 @@ function createApp(overrides = {}) {
   app.use('/api/orders', require('./routes/orders')(deps));
   app.use('/api', notFound);
 
-  app.use(express.static(path.join(__dirname, '..', 'public'), { extensions: ['html'] }));
-  app.use(notFound);
+  const publicDir = path.join(__dirname, '..', 'public');
+  app.use(express.static(publicDir, { extensions: ['html'] }));
+  app.use((req, res) => res.status(404).sendFile(path.join(publicDir, '404.html')));
   app.use(errorHandler);
 
   app.locals.db = db;

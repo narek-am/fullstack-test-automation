@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="ShopLite - a small demo shop used for test automation.">
+  <title>Cart | ShopLite</title>
+  <link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/css/styles.css">
+  <script type="module" src="/js/pages/cart.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header">
+    <a class="brand" href="/" data-testid="brand">ShopLite</a>
+    <nav class="site-nav" aria-label="Main">
+      <ul>
+        <li><a href="/" data-testid="nav-products">Products</a></li>
+        <li class="hidden"><a href="/orders" data-testid="nav-orders">My orders</a></li>
+        <li><a href="/cart" data-testid="nav-cart">Cart <span class="cart-count" data-testid="cart-count" aria-label="items in cart">0</span></a></li>
+        <li><a href="/login" data-testid="nav-login">Log in</a></li>
+        <li class="hidden"><span data-testid="nav-greeting"></span> <button type="button" class="button link" data-testid="nav-logout">Log out</button></li>
+      </ul>
+    </nav>
+  </header>
+  <main id="main" tabindex="-1">
+    <p class="alert" role="alert" data-testid="message"></p>
+    <h1>Your cart</h1>
+    <p class="hidden" data-testid="cart-empty">Your cart is empty. <a href="/">Browse products</a>.</p>
+    <section class="hidden" data-testid="cart-contents" aria-labelledby="cart-heading">
+      <h2 id="cart-heading" class="hidden">Items</h2>
+      <table>
+        <caption class="hidden">Items in your cart</caption>
+        <thead>
+          <tr><th scope="col">Product</th><th scope="col">Price</th><th scope="col">Quantity</th><th scope="col">Line total</th><th scope="col"><span class="hidden">Actions</span></th></tr>
+        </thead>
+        <tbody data-testid="cart-items"></tbody>
+      </table>
+      <div class="totals">
+        <div><span>Subtotal</span><span data-testid="cart-subtotal"></span></div>
+        <div><span>Shipping</span><span data-testid="cart-shipping"></span></div>
+        <div class="grand"><span>Total</span><span data-testid="cart-total"></span></div>
+        <p><button class="button" type="button" data-testid="checkout-button">Place order</button></p>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <p>ShopLite is a demo application for test automation practice. No real orders are placed.</p>
+  </footer>
+</body>
+</html>

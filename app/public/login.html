@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="ShopLite - a small demo shop used for test automation.">
+  <title>Log in | ShopLite</title>
+  <link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/css/styles.css">
+  <script type="module" src="/js/pages/login.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header">
+    <a class="brand" href="/" data-testid="brand">ShopLite</a>
+    <nav class="site-nav" aria-label="Main">
+      <ul>
+        <li><a href="/" data-testid="nav-products">Products</a></li>
+        <li class="hidden"><a href="/orders" data-testid="nav-orders">My orders</a></li>
+        <li><a href="/cart" data-testid="nav-cart">Cart <span class="cart-count" data-testid="cart-count" aria-label="items in cart">0</span></a></li>
+        <li><a href="/login" data-testid="nav-login">Log in</a></li>
+        <li class="hidden"><span data-testid="nav-greeting"></span> <button type="button" class="button link" data-testid="nav-logout">Log out</button></li>
+      </ul>
+    </nav>
+  </header>
+  <main id="main" tabindex="-1">
+    <p class="alert" role="alert" data-testid="message"></p>
+    <h1>Log in</h1>
+    <form class="form" data-testid="login-form" novalidate>
+      <div class="field">
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" autocomplete="username" required data-testid="email-input">
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" autocomplete="current-password" required data-testid="password-input">
+      </div>
+      <button class="button" type="submit" data-testid="login-button">Log in</button>
+      <p class="muted">Demo account: alice@shoplite.test / Passw0rd!</p>
+    </form>
+  </main>
+  <footer class="site-footer">
+    <p>ShopLite is a demo application for test automation practice. No real orders are placed.</p>
+  </footer>
+</body>
+</html>
