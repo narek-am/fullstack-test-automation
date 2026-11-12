@@ -1,0 +1,14 @@
+{
+  "name": "shoplite-performance-tests",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Performance tests for ShopLite: Apache Bench, JMeter, Gatling and Lighthouse CI",
+  "scripts": {
+    "app": "node scripts/start-app.mjs 3400",
+    "ab": "ab/benchmark.sh",
+    "lighthouse": "lhci autorun --config=lighthouse/lighthouserc.cjs"
+  },
+  "devDependencies": {
+    "@lhci/cli": "0.15.1"
+  }
+}
