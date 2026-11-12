@@ -1,0 +1,17 @@
+# Talisman (https://github.com/thoughtworks/talisman) blocks commits that look like they contain
+# secrets: keys, tokens, private key files, high-entropy strings. Run it as a pre-commit hook
+# (security-tests/scripts/install-talisman-hook.sh); CI scans the whole git history.
+version: "1.0"
+scopeconfig:
+  - scope: node     # integrity hashes in package-lock.json look like secrets but are not
+  - scope: images   # screenshot baselines are binary files
+allowed_patterns:
+  # Passwords of ShopLite's seeded demo accounts (app/src/seed.js). They exist only in local test
+  # databases and are documented on purpose, so the test suites can log in.
+  - 'Passw0rd!'
+  - 'Adm1nPass!'
+custom_patterns:
+  # Formats Talisman should always flag, on top of its built-in detectors.
+  - 'sk_live_[0-9a-zA-Z]{16,}'
+  - 'ghp_[0-9A-Za-z]{36}'
+  - 'AKIA[0-9A-Z]{16}'

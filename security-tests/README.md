@@ -7,6 +7,7 @@ Security checks for ShopLite, organised by the threats in [`docs/threat-model.md
 | API (in-process) | Jest + Supertest | Headers, authentication, access control, injection, input handling |
 | Frontend source | Jest (static checks) | Dangerous DOM sinks, inline scripts and handlers |
 | Dependencies | npm audit, OSV-Scanner | Known vulnerabilities in npm and Maven dependencies |
+| Secrets | Talisman | Keys, tokens and other secrets in commits |
 
 ## Run
 
@@ -53,6 +54,19 @@ cd app && npm install --package-lock-only express@4.17.1 && cd ..
 node security-tests/scripts/npm-audit-report.mjs   # exits 1: "4 high, 3 low" in production dependencies
 git checkout app/package.json app/package-lock.json
 ```
+
+## Secret scanning (Talisman)
+
+[Talisman](https://github.com/thoughtworks/talisman) looks for secrets before they reach git:
+private key files, tokens, high-entropy strings and the extra patterns in
+[`.talismanrc`](../.talismanrc) (AWS keys, GitHub tokens, live Stripe keys).
+
+- **Before a commit:** install Talisman, then run `security-tests/scripts/install-talisman-hook.sh`
+  to add a `pre-commit` hook.
+- **In CI** (job `security-secrets`): `talisman --scan` checks every commit in the history.
+
+The demo accounts' passwords are allowed explicitly in `.talismanrc`: they are seeded test data,
+documented on purpose so the suites can log in.
 
 ## Bugs these tests found
 

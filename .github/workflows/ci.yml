@@ -209,6 +209,30 @@ jobs:
           path: osv-report.*
           retention-days: 7
 
+  security-secrets:
+    name: Security (secret scan)
+    runs-on: ubuntu-latest
+    env:
+      TALISMAN_VERSION: v1.37.0
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # scan every commit, not just the latest tree
+      - name: Install Talisman (checksum verified)
+        run: |
+          base=https://github.com/thoughtworks/talisman/releases/download/$TALISMAN_VERSION
+          curl -sSfL -o talisman_linux_amd64 "$base/talisman_linux_amd64"
+          curl -sSfL "$base/checksums" | grep ' talisman_linux_amd64$' | sha256sum -c -
+          install -m 755 talisman_linux_amd64 /usr/local/bin/talisman
+      - name: Scan the git history for secrets
+        run: talisman --scan
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: talisman-report
+          path: talisman_report/
+          retention-days: 7
+
   ui-playwright:
     name: UI (Playwright, 3 browsers)
     runs-on: ubuntu-latest
