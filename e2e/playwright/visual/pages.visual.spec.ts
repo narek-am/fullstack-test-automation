@@ -101,9 +101,20 @@ test.describe('Interaction states of the primary button', () => {
     await productPage.quantity.focus();
     await page.keyboard.press('Tab'); // keyboard focus shows the :focus-visible outline
     await expect(button).toBeFocused();
-    // The focus outline is drawn outside the button (outline-offset), so capture the whole form:
-    // a screenshot of the button alone would crop the outline away.
-    await expect(page.getByTestId('add-to-cart-form')).toHaveScreenshot('button-focus-visible.png', smallUi);
+    // Functional check first: keyboard focus must produce the visible focus ring.
+    const ring = await button.evaluate((el) => {
+      const style = getComputedStyle(el);
+      return { focusVisible: el.matches(':focus-visible'), outline: `${style.outlineStyle} ${style.outlineWidth}` };
+    });
+    expect(ring).toEqual({ focusVisible: true, outline: 'solid 3px' });
+    // The outline is drawn outside the button (3px + 2px offset), so clip a box 6px larger than the
+    // button. Clipping (instead of shooting the whole form) keeps the OS-drawn number input out.
+    const box = await button.boundingBox();
+    if (!box) throw new Error('button is not visible');
+    await expect(page).toHaveScreenshot('button-focus-visible.png', {
+      ...smallUi,
+      clip: { x: box.x - 6, y: box.y - 6, width: box.width + 12, height: box.height + 12 },
+    });
 
     await productPage.goto(6); // sold out
     await expect(productPage.addToCartButton).toBeDisabled();
