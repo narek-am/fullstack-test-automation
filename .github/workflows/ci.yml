@@ -273,7 +273,7 @@ jobs:
           retention-days: 7
 
   performance-load:
-    name: Performance (Apache Bench, Gatling)
+    name: Performance (Apache Bench, JMeter, Gatling)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -300,6 +300,9 @@ jobs:
         run: performance-tests/ab/benchmark.sh
         env:
           OUT: performance-tests/ab/results
+      - name: JMeter (closed workload, 25 shoppers)
+        run: ./mvnw -B -Pjmeter verify
+        working-directory: performance-tests/jvm
       - name: Gatling (open workload, visitors and buyers)
         if: success() || failure()
         run: ./mvnw -B gatling:test
@@ -313,6 +316,8 @@ jobs:
           name: load-test-reports
           path: |
             performance-tests/ab/results/
+            performance-tests/jvm/target/jmeter/reports/
+            performance-tests/jvm/target/jmeter/results/
             performance-tests/jvm/target/gatling/
           retention-days: 7
 

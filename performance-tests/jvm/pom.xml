@@ -7,13 +7,14 @@
     <groupId>com.shoplite</groupId>
     <artifactId>shoplite-load-tests</artifactId>
     <version>1.0.0</version>
-    <name>ShopLite load tests (Gatling)</name>
+    <name>ShopLite load tests (Gatling, JMeter)</name>
 
     <properties>
         <maven.compiler.release>21</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <gatling.version>3.16.0</gatling.version>
         <gatling-maven-plugin.version>4.21.12</gatling-maven-plugin.version>
+        <jmeter-maven-plugin.version>3.8.0</jmeter-maven-plugin.version>
         <!-- Where the app under test runs (start it with ../scripts/start-app.mjs) -->
         <host>127.0.0.1</host>
         <port>3400</port>
@@ -51,4 +52,43 @@
         </plugins>
     </build>
 
+    <profiles>
+        <!-- ./mvnw -Pjmeter verify -->
+        <profile>
+            <id>jmeter</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.lazerycode.jmeter</groupId>
+                        <artifactId>jmeter-maven-plugin</artifactId>
+                        <version>${jmeter-maven-plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>configuration</id>
+                                <goals><goal>configure</goal></goals>
+                            </execution>
+                            <execution>
+                                <id>jmeter-tests</id>
+                                <goals><goal>jmeter</goal></goals>
+                            </execution>
+                            <execution>
+                                <id>jmeter-check-results</id>
+                                <goals><goal>results</goal></goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <generateReports>true</generateReports>
+                            <testResultsTimestamp>false</testResultsTimestamp>
+                            <!-- Fail the build if more than 1% of samples fail (including the 1 s duration assertion) -->
+                            <errorRateThresholdInPercent>1</errorRateThresholdInPercent>
+                            <propertiesUser>
+                                <host>${host}</host>
+                                <port>${port}</port>
+                            </propertiesUser>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
