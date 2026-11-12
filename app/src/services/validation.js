@@ -23,8 +23,11 @@ function requireString(value, field, { min = 1, max = 200 } = {}) {
   return value;
 }
 
+// Strings must be plain decimal digits: Number() alone would also accept '0x10', '1e3' and ' 7 '.
+const DECIMAL_RE = /^[0-9]+$/;
+
 function requirePositiveInt(value, field, { max = 99 } = {}) {
-  const n = typeof value === 'string' && value.trim() !== '' ? Number(value) : value;
+  const n = typeof value === 'string' ? (DECIMAL_RE.test(value) ? Number(value) : NaN) : value;
   if (!Number.isInteger(n) || n <= 0 || n > max) {
     throw new ValidationError(`${field} must be an integer between 1 and ${max}`, field);
   }

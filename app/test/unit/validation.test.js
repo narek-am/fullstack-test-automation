@@ -44,5 +44,10 @@ describe('validation', () => {
     it.each([0, -3, 1.2, '1e2', 'abc', '', ' ', 100, NaN, Infinity])('rejects %p (max 99)', (value) => {
       expect(() => requirePositiveInt(value, 'quantity')).toThrow(ValidationError);
     });
+
+    // Found by the security tests: Number() accepted these, so /api/products/0x01 returned product 1.
+    it.each(['0x01', '0b1', '0o7', '1e1', ' 7', '7 ', '+7', '7.0'])('rejects the non-decimal string %p', (value) => {
+      expect(() => requirePositiveInt(value, 'id', { max: 1000 })).toThrow(ValidationError);
+    });
   });
 });
