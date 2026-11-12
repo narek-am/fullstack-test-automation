@@ -38,6 +38,7 @@ describe.each(RESPONSES)('%s (%s)', (_, path) => {
       'x-frame-options': 'DENY',
       'referrer-policy': 'no-referrer',
       'cross-origin-opener-policy': 'same-origin',
+      'cross-origin-embedder-policy': 'require-corp',
       'cross-origin-resource-policy': 'same-origin',
     });
     expect(res.headers['permissions-policy']).toContain('camera=()');

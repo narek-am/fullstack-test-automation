@@ -9,6 +9,8 @@ function securityHeaders(req, res, next) {
   res.setHeader('Referrer-Policy', 'no-referrer');
   res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
   res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
+  // Every resource is same-origin, so the page can opt into full cross-origin isolation.
+  res.setHeader('Cross-Origin-Embedder-Policy', 'require-corp');
   res.setHeader('Cross-Origin-Resource-Policy', 'same-origin');
   res.removeHeader('X-Powered-By');
   next();
