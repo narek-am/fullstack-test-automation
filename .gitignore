@@ -35,3 +35,8 @@ performance-tests/jmeter/report/
 /zap/
 talisman_report/
 osv-report.*
+
+# Performance test output
+performance-tests/**/results/
+performance-tests/**/target/
+performance-tests/**/.lighthouseci/
