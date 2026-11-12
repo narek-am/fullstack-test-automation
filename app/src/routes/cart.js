@@ -1,17 +1,6 @@
 const express = require('express');
 const { requirePositiveInt } = require('../services/validation');
-const pricing = require('../services/pricing');
-
-function loadCart(db, userId) {
-  const lines = db
-    .prepare(
-      `SELECT p.id AS productId, p.name, p.image, p.price_cents AS unitPriceCents, p.stock, c.quantity
-       FROM cart_items c JOIN products p ON p.id = c.product_id
-       WHERE c.user_id = ? ORDER BY p.name`,
-    )
-    .all(userId);
-  return { items: lines, ...pricing.total(lines) };
-}
+const { loadCart } = require('../services/cart');
 
 module.exports = function cartRoutes({ db, authenticateUser }) {
   const router = express.Router();
@@ -63,4 +52,3 @@ module.exports = function cartRoutes({ db, authenticateUser }) {
   return router;
 };
 
-module.exports.loadCart = loadCart;

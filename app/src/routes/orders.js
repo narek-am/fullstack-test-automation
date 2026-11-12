@@ -1,7 +1,7 @@
 const express = require('express');
 const { withTransaction } = require('../db');
 const { requirePositiveInt } = require('../services/validation');
-const { loadCart } = require('./cart');
+const { loadCart } = require('../services/cart');
 
 class ConflictError extends Error {
   constructor(message, details) {
