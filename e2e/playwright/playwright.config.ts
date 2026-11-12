@@ -33,6 +33,8 @@ export default defineConfig({
     ['list'],
     ['html', { open: 'never' }],
     ['junit', { outputFile: 'test-results/junit.xml' }],
+    // On GitHub Actions, failures also become annotations on the run summary page.
+    ...(process.env.GITHUB_ACTIONS ? [['github'] as const] : []),
   ],
   use: {
     testIdAttribute: 'data-testid',
