@@ -15,6 +15,10 @@
 }
 
 * { box-sizing: border-box; }
+/* Reserve the scrollbar's width from the start. Where scrollbars take up space (Chrome on Linux and
+   Windows), the scrollbar that appears once products load would otherwise move the whole page
+   sideways: Lighthouse measured CLS 0.121 on the CI runner, 0.014 on macOS. */
+html { scrollbar-gutter: stable; }
 /* Sticky footer: the footer starts at the bottom of the window, so content loaded later by
    JavaScript pushes it down off-screen instead of shifting it on screen (Lighthouse CLS). */
 body { margin: 0; line-height: 1.5; background: var(--bg); min-height: 100vh; display: flex; flex-direction: column; }
