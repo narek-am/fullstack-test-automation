@@ -44,3 +44,4 @@ cfr-tests/test-results/
 cfr-tests/playwright-report/
 mobile-tests/appium.log
 mobile-tests/logs/
+mobile-tests/test-output.log

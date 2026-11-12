@@ -5,6 +5,7 @@ import { join } from 'node:path';
 
 const root = join(import.meta.dirname, '..');
 const files = [
+  join(root, 'test-output.log'),
   join(root, 'appium.log'),
   ...(existsSync(join(root, 'logs')) ? readdirSync(join(root, 'logs')).map((f) => join(root, 'logs', f)) : []),
 ].filter(existsSync);

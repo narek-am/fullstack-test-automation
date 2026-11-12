@@ -41,6 +41,10 @@ exports.config = {
     ],
   ],
 
+  // No virtual display: the browser runs on the device, not on this machine. (WebdriverIO otherwise
+  // wraps Linux workers in xvfb-run, and the first CI runs stopped before any worker started.)
+  autoXvfb: false,
+
   // Worker logs go to files, which CI turns into an annotation when a run fails.
   outputDir: './logs',
   logLevel: 'info',

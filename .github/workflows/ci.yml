@@ -455,7 +455,8 @@ jobs:
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot
           working-directory: mobile-tests
-          script: npm test
+          # Console output goes to a file too, so a failure can be shown on the run page.
+          script: npm test > test-output.log 2>&1 || (cat test-output.log; exit 1)
       - name: Show the cause of a failure
         if: failure()
         run: node mobile-tests/scripts/annotate-failures.mjs
@@ -466,6 +467,7 @@ jobs:
           path: |
             mobile-tests/appium.log
             mobile-tests/logs/
+            mobile-tests/test-output.log
           retention-days: 7
 
   ui-playwright:
