@@ -28,7 +28,7 @@
 | T10 | **D**enial of service | Huge request bodies or slow endpoints | 10 KB JSON body limit; load tests with targets | Security + performance tests |
 | T11 | **E**levation of privilege | Customer calls admin-only stock endpoint | Role check on the route | `products.test.js` |
 | T12 | **E**levation of privilege | XSS through product names | `textContent` only in the frontend; strict CSP | Security tests, ZAP scan |
-| T13 | Supply chain | Vulnerable npm/Maven dependency | `npm audit`, OWASP Dependency-Check in CI | CI security job |
+| T13 | Supply chain | Vulnerable npm/Maven dependency | `npm audit` gate on production dependencies; OSV-Scanner for npm and Maven | CI `security-dependencies` job |
 | T14 | Clickjacking | Shop loaded in a hostile iframe | `X-Frame-Options: DENY`, `frame-ancestors 'none'` | Security tests |
 
 ## Known gaps (accepted for a demo app)

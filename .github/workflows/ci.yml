@@ -172,6 +172,43 @@ jobs:
       - run: npm test -- --ci
         working-directory: security-tests
 
+  security-dependencies:
+    name: Security (dependency scan)
+    runs-on: ubuntu-latest
+    env:
+      OSV_SCANNER_VERSION: v2.7.0
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      # Gate: anything that ships with the shop must be free of known vulnerabilities.
+      # Test tooling is listed in the job summary but does not block (see security-tests/README.md).
+      - name: npm audit (all npm projects)
+        run: node security-tests/scripts/npm-audit-report.mjs
+      # OSV-Scanner covers both ecosystems, including the Maven test project and its transitive
+      # dependencies. Report only: every Maven dependency here is a test tool.
+      - name: Install OSV-Scanner (checksum verified)
+        run: |
+          base=https://github.com/google/osv-scanner/releases/download/$OSV_SCANNER_VERSION
+          curl -sSfL -o osv-scanner_linux_amd64 "$base/osv-scanner_linux_amd64"
+          curl -sSfL "$base/osv-scanner_SHA256SUMS" | grep ' osv-scanner_linux_amd64$' | sha256sum -c -
+          install -m 755 osv-scanner_linux_amd64 /usr/local/bin/osv-scanner
+      - name: OSV-Scanner (npm + Maven)
+        run: |
+          status=0
+          osv-scanner scan source --recursive --format markdown --output osv-report.md . || status=$?
+          osv-scanner scan source --recursive --format html --output osv-report.html . || true
+          { echo '## OSV-Scanner'; echo; cat osv-report.md; } >> "$GITHUB_STEP_SUMMARY"
+          # 0 = nothing found, 1 = vulnerabilities found (reported above); anything else is a scanner error.
+          if [ "$status" -gt 1 ]; then exit "$status"; fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: osv-report
+          path: osv-report.*
+          retention-days: 7
+
   ui-playwright:
     name: UI (Playwright, 3 browsers)
     runs-on: ubuntu-latest

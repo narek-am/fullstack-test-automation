@@ -6,6 +6,7 @@ Security checks for ShopLite, organised by the threats in [`docs/threat-model.md
 |-------|------|----------------|
 | API (in-process) | Jest + Supertest | Headers, authentication, access control, injection, input handling |
 | Frontend source | Jest (static checks) | Dangerous DOM sinks, inline scripts and handlers |
+| Dependencies | npm audit, OSV-Scanner | Known vulnerabilities in npm and Maven dependencies |
 
 ## Run
 
@@ -34,6 +35,24 @@ Every negative test is paired with a positive one where it matters (for example,
 `frontend.security.test.js` reads `app/public` and fails on `innerHTML`, `eval`,
 `document.write`, inline `<script>` blocks, `on…=` handlers and `javascript:` links.
 The CSP would block most of these in the browser; the test catches them at commit time.
+
+## Dependency scanning (CI job `security-dependencies`)
+
+- `scripts/npm-audit-report.mjs` runs `npm audit` in every npm project and writes a table to the
+  GitHub job summary. **Production dependencies must have zero known vulnerabilities**, otherwise
+  the job fails. Findings in dev-only test tooling (Newman, BackstopJS, Cypress…) are listed as
+  notices: that code never ships, and most fixes need major upgrades of those tools.
+- [OSV-Scanner](https://google.github.io/osv-scanner/) scans npm lockfiles and `java-tests/pom.xml`
+  (including transitive Maven dependencies) against the OSV database. It is report-only, because
+  every Maven dependency in this repo is a test tool. The binary's SHA-256 is checked before use.
+
+To check that the gate works, pin an old Express in `app` and run the script:
+
+```bash
+cd app && npm install --package-lock-only express@4.17.1 && cd ..
+node security-tests/scripts/npm-audit-report.mjs   # exits 1: "4 high, 3 low" in production dependencies
+git checkout app/package.json app/package-lock.json
+```
 
 ## Bugs these tests found
 
