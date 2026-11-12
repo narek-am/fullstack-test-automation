@@ -63,6 +63,15 @@ describe.each(pages)('%s', (_, html) => {
     expect(html).not.toMatch(/javascript:/i);
   });
 
+  it('submits password forms with POST, so a password never ends up in a URL', () => {
+    // Found by the ZAP scan: without method="post", a login form falls back to GET when its
+    // script fails to load, and the password lands in the URL, browser history and server logs.
+    const forms = [...html.matchAll(/<form\b([^>]*)>([\s\S]*?)<\/form>/gi)];
+    for (const [, attributes, body] of forms.filter(([, , b]) => /type="password"/i.test(b))) {
+      expect(attributes).toMatch(/\smethod="post"/i);
+    }
+  });
+
   it('has no inline style attributes (the CSP does not allow them)', () => {
     expect(html).not.toMatch(/\sstyle\s*=/i);
   });
