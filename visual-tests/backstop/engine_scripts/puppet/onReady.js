@@ -4,6 +4,9 @@ module.exports = async (page, scenario) => {
   await page.addStyleTag({
     content: `
       *, *::before, *::after { animation: none !important; transition: none !important; caret-color: transparent !important; }
+      /* Whether the scrollbar takes up space depends on the machine (macOS hides it with a trackpad,
+         shows it with a mouse, as on the CI runner), so screenshots ignore the reserved gutter. */
+      html { scrollbar-gutter: auto !important; }
     `,
   });
   await page.evaluate(() => document.fonts.ready);
