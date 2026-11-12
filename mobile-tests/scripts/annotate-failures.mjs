@@ -10,6 +10,18 @@ const files = [
   ...(existsSync(join(root, 'logs')) ? readdirSync(join(root, 'logs')).map((f) => join(root, 'logs', f)) : []),
 ].filter(existsSync);
 
+// With --summary (after a passing run): post the spec reporter's results as a notice instead.
+if (process.argv.includes('--summary')) {
+  const output = join(root, 'test-output.log');
+  const results = existsSync(output)
+    ? readFileSync(output, 'utf8').split('\n').map((l) => l.replace(/\x1b\[[0-9;]*m/g, '').trim())
+        .filter((l) => /✓|✖|Spec Files:/.test(l))
+        .map((l) => l.replace(/^\[[^\]]*\]\s*/, ''))
+    : ['test-output.log not found'];
+  console.log(`::notice title=Appium results::${results.join('%0A')}`);
+  process.exit(0);
+}
+
 const interesting = /error|fail|exception|unable|could not|cannot|timed? ?out|not found|refused/i;
 const lines = [];
 for (const file of files) {

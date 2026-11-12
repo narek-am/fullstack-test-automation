@@ -457,6 +457,9 @@ jobs:
           working-directory: mobile-tests
           # Console output goes to a file too, so a failure can be shown on the run page.
           script: npm test > test-output.log 2>&1 || (cat test-output.log; exit 1)
+      - name: Show which tests ran
+        if: success()
+        run: node mobile-tests/scripts/annotate-failures.mjs --summary
       - name: Show the cause of a failure
         if: failure()
         run: node mobile-tests/scripts/annotate-failures.mjs

@@ -59,4 +59,13 @@ The chromedriver matching the emulator's Chrome is downloaded automatically
 
 Job `mobile-appium` boots an Android 14 (API 34, `google_apis`, x86_64) emulator with KVM on the
 Linux runner using [android-emulator-runner](https://github.com/ReactiveCircus/android-emulator-runner),
-starts ShopLite on the runner and runs the suite. The Appium server log is uploaded as an artifact.
+starts ShopLite on the runner and runs the suite. A passing run lists the tests as a notice on
+the run page; a failing run posts the last error lines from the WebdriverIO and Appium logs as an
+annotation. The logs are also uploaded as an artifact.
+
+Getting it running in CI took three fixes, each found from those annotations:
+1. Appium 3 renamed the log option: `--log-file` became `--log`.
+2. WebdriverIO 9 wraps Linux workers in `xvfb-run` by default; the worker never started.
+   A virtual display isn't needed when the browser runs on the device, so `autoXvfb` is off.
+3. The failure annotation first showed only error-looking lines; it now includes the last lines of
+   each log, which is how fix 2 was found.
