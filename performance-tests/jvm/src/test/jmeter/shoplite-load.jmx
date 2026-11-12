@@ -5,7 +5,7 @@
   test duration. Every response must succeed with the expected status and arrive within 1 second.
 
   Run: start the app with ../scripts/start-app.mjs, then ./mvnw -Pjmeter verify
-  Override with JMeter properties, e.g. -Jthreads=10 -Jduration=30 (max 50 threads = 50 users).
+  Override from Maven, e.g. ./mvnw -Pjmeter verify -Dthreads=10 -Dduration=30 (max 50 threads = 50 users).
 -->
 <jmeterTestPlan version="1.2" properties="5.0" jmeter="5.6.3">
   <hashTree>

@@ -18,6 +18,10 @@
         <!-- Where the app under test runs (start it with ../scripts/start-app.mjs) -->
         <host>127.0.0.1</host>
         <port>3400</port>
+        <!-- JMeter load size; override with e.g. -Dthreads=10 -Dduration=30 (max 50 threads = 50 users) -->
+        <threads>25</threads>
+        <rampUp>20</rampUp>
+        <duration>60</duration>
     </properties>
 
     <dependencies>
@@ -84,6 +88,9 @@
                             <propertiesUser>
                                 <host>${host}</host>
                                 <port>${port}</port>
+                                <threads>${threads}</threads>
+                                <rampUp>${rampUp}</rampUp>
+                                <duration>${duration}</duration>
                             </propertiesUser>
                         </configuration>
                     </plugin>
