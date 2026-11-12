@@ -30,6 +30,12 @@ if (existsSync(manifestFile)) {
     lines.push(`| ${path(run.url)} | ${report.categories.performance.score} | ${ms('first-contentful-paint')} | ` +
       `${ms('largest-contentful-paint')} | ${ms('total-blocking-time')} | ` +
       `${a['cumulative-layout-shift'].numericValue.toFixed(3)} | ${(total.transferSize / 1024).toFixed(1)} KB | ${total.requestCount} |`);
+    // Which elements moved: makes a layout-shift failure on CI explainable without the full report.
+    const shifts = (a['layout-shifts']?.details?.items ?? []).slice(0, 3);
+    if (shifts.length) {
+      const moved = shifts.map((i) => `${i.node?.selector ?? '?'} (${(i.score ?? 0).toFixed(3)})`).join(', ');
+      console.log(`::notice title=Layout shifts on ${path(run.url)}::${moved}`);
+    }
   }
 }
 
