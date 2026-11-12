@@ -41,6 +41,10 @@ exports.config = {
     ],
   ],
 
+  // Worker logs go to files, which CI turns into an annotation when a run fails.
+  outputDir: './logs',
+  logLevel: 'info',
+
   framework: 'mocha',
   reporters: ['spec'],
   mochaOpts: { ui: 'bdd', timeout: 180000 },
