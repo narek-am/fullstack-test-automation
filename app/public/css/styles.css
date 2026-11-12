@@ -15,7 +15,9 @@
 }
 
 * { box-sizing: border-box; }
-body { margin: 0; line-height: 1.5; background: var(--bg); }
+/* Sticky footer: the footer starts at the bottom of the window, so content loaded later by
+   JavaScript pushes it down off-screen instead of shifting it on screen (Lighthouse CLS). */
+body { margin: 0; line-height: 1.5; background: var(--bg); min-height: 100vh; display: flex; flex-direction: column; }
 a { color: var(--primary); }
 :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
 
@@ -31,7 +33,7 @@ a { color: var(--primary); }
 .site-nav a { text-decoration: none; font-weight: 500; }
 .cart-count { display: inline-block; min-width: 1.5em; padding: 0 6px; border-radius: 999px; background: var(--primary); color: #fff; font-size: .8rem; text-align: center; }
 
-main { max-width: 1040px; margin: 0 auto; padding: 24px; }
+main { flex: 1 0 auto; width: 100%; max-width: 1040px; margin: 0 auto; padding: 24px; }
 h1 { margin-top: 0; }
 
 .filters { display: flex; flex-wrap: wrap; gap: 12px; align-items: end; margin-bottom: 24px; }
