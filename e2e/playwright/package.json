@@ -11,9 +11,11 @@
     "report": "playwright show-report",
     "typecheck": "tsc --noEmit",
     "test:visual": "playwright test --project=visual",
-    "test:visual:update": "playwright test --project=visual --update-snapshots"
+    "test:visual:update": "playwright test --project=visual --update-snapshots",
+    "test:a11y": "playwright test --project=a11y"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.14.0",
     "@playwright/test": "^1.49.1",
     "@types/node": "^22.10.0",
     "typescript": "^5.7.2"

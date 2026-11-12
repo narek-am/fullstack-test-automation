@@ -11,6 +11,8 @@ const functional = [
 // Screenshot comparison runs in Chromium only. Baselines are stored per platform
 // (…-darwin.png), so this project runs on macOS in CI as well.
 const VISUAL_PORT = 3104;
+// Accessibility checks (axe-core and keyboard tests) run in Chromium on their own instance.
+const A11Y_PORT = 3105;
 
 export default defineConfig({
   fullyParallel: true,
@@ -60,8 +62,13 @@ export default defineConfig({
         bypassCSP: true,
       },
     },
+    {
+      name: 'a11y',
+      testDir: './a11y',
+      use: { ...devices['Desktop Chrome'], baseURL: `http://127.0.0.1:${A11Y_PORT}` },
+    },
   ],
-  webServer: [...functional.map(({ port }) => port), VISUAL_PORT].map((port) => ({
+  webServer: [...functional.map(({ port }) => port), VISUAL_PORT, A11Y_PORT].map((port) => ({
     command: `node scripts/start-app.mjs ${port}`,
     url: `http://127.0.0.1:${port}/api/health`,
     reuseExistingServer: !process.env.CI,
