@@ -1,0 +1,21 @@
+{
+  "product": {
+    "id": "#number? _ > 0",
+    "sku": "#regex [A-Z]{2}-[0-9]{3}",
+    "name": "#string",
+    "description": "#string",
+    "category": "#? ['books', 'merch', 'hardware'].includes(_)",
+    "priceCents": "#number? _ > 0",
+    "stock": "#number? _ >= 0",
+    "inStock": "#boolean",
+    "image": "#regex /img/.+\\.svg"
+  },
+  "cartLine": {
+    "productId": "#number",
+    "name": "#string",
+    "image": "#string",
+    "unitPriceCents": "#number",
+    "stock": "#number",
+    "quantity": "#number? _ > 0"
+  }
+}
