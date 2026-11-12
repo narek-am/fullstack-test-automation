@@ -1,0 +1,73 @@
+flowchart LR
+
+subgraph 0["src"]
+1["app.js"]
+5["config.js"]
+6["db.js"]
+8["seed.js"]
+subgraph 9["services"]
+A["passwords.js"]
+J["validation.js"]
+L["cart.js"]
+M["pricing.js"]
+P["events.js"]
+S["tokens.js"]
+end
+subgraph B["middleware"]
+C["auth.js"]
+D["chaos.js"]
+E["errors.js"]
+F["securityHeaders.js"]
+I["rateLimit.js"]
+end
+subgraph G["routes"]
+H["auth.js"]
+K["cart.js"]
+N["orders.js"]
+O["products.js"]
+end
+T["index.js"]
+end
+subgraph 2["node_modules"]
+subgraph 3["express"]
+4["index.js"]
+end
+subgraph Q["kafkajs"]
+R["index.js"]
+end
+end
+7["node:sqlite"]
+1-->5
+1-->6
+1-->C
+1-->D
+1-->E
+1-->F
+1-->H
+1-->K
+1-->N
+1-->O
+1-->P
+1-->S
+1-->4
+6-->8
+6-->A
+6-->7
+H-->I
+H-->A
+H-->J
+H-->4
+K-->L
+K-->J
+K-->4
+L-->M
+N-->6
+N-->L
+N-->J
+N-->4
+O-->J
+O-->4
+P-->R
+T-->1
+T-->5
+T-->P

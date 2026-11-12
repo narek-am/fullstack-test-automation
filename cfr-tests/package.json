@@ -5,8 +5,8 @@
   "description": "Cross-functional requirement tests for ShopLite: chaos experiments and architecture rules",
   "scripts": {
     "chaos": "playwright test",
-    "architecture": "depcruise --config architecture/dependency-cruiser.cjs ../app/src ../app/public/js",
-    "architecture:graph": "depcruise --config architecture/dependency-cruiser.cjs --output-type dot ../app/src | dot -T svg > architecture/graph.svg",
+    "architecture": "cd ../app && depcruise --config ../cfr-tests/architecture/dependency-cruiser.cjs src public/js",
+    "architecture:graph": "cd ../app && depcruise --config ../cfr-tests/architecture/dependency-cruiser.cjs --output-type mermaid src > ../cfr-tests/architecture/dependency-graph.mmd",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
