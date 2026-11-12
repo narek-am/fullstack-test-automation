@@ -111,8 +111,10 @@ test.describe('Interaction states of the primary button', () => {
     // button. Clipping (instead of shooting the whole form) keeps the OS-drawn number input out.
     const box = await button.boundingBox();
     if (!box) throw new Error('button is not visible');
+    // Anti-aliasing of the text and the ring's rounded corners differs by ~135 pixels on the CI
+    // runner. The ring itself is ~1000 pixels, so a colour or thickness change still fails.
     await expect(page).toHaveScreenshot('button-focus-visible.png', {
-      ...smallUi,
+      maxDiffPixels: 300,
       clip: { x: box.x - 6, y: box.y - 6, width: box.width + 12, height: box.height + 12 },
     });
 
