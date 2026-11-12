@@ -42,3 +42,4 @@ performance-tests/**/target/
 performance-tests/**/.lighthouseci/
 cfr-tests/test-results/
 cfr-tests/playwright-report/
+mobile-tests/appium.log

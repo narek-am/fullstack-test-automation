@@ -419,6 +419,50 @@ jobs:
           path: cfr-tests/playwright-report/
           retention-days: 7
 
+  mobile-appium:
+    name: Mobile (Appium, Chrome on Android emulator)
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: |
+            app/package-lock.json
+            mobile-tests/package-lock.json
+      # Hardware acceleration for the emulator on the Linux runner.
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - run: npm ci --omit=dev
+        working-directory: app
+      - run: npm ci
+        working-directory: mobile-tests
+      - name: Start ShopLite (reachable from the emulator as 10.0.2.2)
+        run: |
+          nohup node mobile-tests/scripts/start-app.mjs 3701 > "$RUNNER_TEMP/app.log" 2>&1 &
+          curl -sSf --retry 20 --retry-delay 1 --retry-all-errors http://127.0.0.1:3701/api/health
+      - name: Appium tests on an Android emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          target: google_apis
+          arch: x86_64
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot
+          working-directory: mobile-tests
+          script: npm test
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: appium-log
+          path: mobile-tests/appium.log
+          retention-days: 7
+
   ui-playwright:
     name: UI (Playwright, 3 browsers + 2 phones)
     runs-on: ubuntu-latest
