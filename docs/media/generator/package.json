@@ -1,0 +1,15 @@
+{
+  "name": "shoplite-readme-media",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Generates the GIFs and images in docs/media from the running app and real test output",
+  "type": "module",
+  "scripts": {
+    "media": "node generate.mjs"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.65.0",
+    "gifenc": "1.0.3",
+    "pngjs": "7.0.0"
+  }
+}
