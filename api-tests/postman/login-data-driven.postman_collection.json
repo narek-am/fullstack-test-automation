@@ -1,0 +1,61 @@
+{
+  "info": {
+    "name": "ShopLite login (data-driven)",
+    "description": "Runs once per row of data/login-cases.csv: newman run ... -d data/login-cases.csv",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Login case",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// Build the body from the data row so missing fields can be tested too.",
+              "    const body = {};",
+              "    if (pm.iterationData.get('email') !== '<missing>') body.email = pm.iterationData.get('email');",
+              "    if (pm.iterationData.get('password') !== '<missing>') body.password = pm.iterationData.get('password');",
+              "    pm.request.body.raw = JSON.stringify(body);"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const expected = Number(pm.iterationData.get('expectedStatus'));",
+              "    pm.test(pm.iterationData.get('case') + ' -> ' + expected, () => pm.response.to.have.status(expected));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/auth/login",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "auth",
+            "login"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{}"
+        }
+      }
+    }
+  ]
+}

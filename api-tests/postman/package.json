@@ -1,0 +1,14 @@
+{
+  "name": "shoplite-postman-tests",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Postman collections for the ShopLite API, run headless with Newman",
+  "scripts": {
+    "test": "node run.js",
+    "test:remote": "newman run shoplite.postman_collection.json -e local.postman_environment.json --env-var baseUrl=$BASE_URL"
+  },
+  "devDependencies": {
+    "newman": "^6.2.1",
+    "newman-reporter-htmlextra": "^1.23.1"
+  }
+}

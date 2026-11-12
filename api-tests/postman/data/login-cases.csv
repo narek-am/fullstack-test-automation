@@ -1,0 +1,10 @@
+case,email,password,expectedStatus
+valid customer,alice@shoplite.test,Passw0rd!,200
+valid admin,admin@shoplite.test,Adm1nPass!,200
+email is case-insensitive,ALICE@shoplite.test,Passw0rd!,200
+wrong password,alice@shoplite.test,passw0rd!,401
+unknown user,ghost@shoplite.test,Passw0rd!,401
+invalid email format,not-an-email,Passw0rd!,400
+missing email,<missing>,Passw0rd!,400
+missing password,alice@shoplite.test,<missing>,400
+sql injection in email,'OR'1'='1@x.io,anything,401
