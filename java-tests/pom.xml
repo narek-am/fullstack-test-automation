@@ -8,24 +8,45 @@
     <artifactId>shoplite-java-tests</artifactId>
     <version>1.0.0</version>
     <name>ShopLite Java test suites</name>
-    <description>REST Assured, Karate and JDBC tests for ShopLite</description>
+    <description>REST Assured, Karate, JDBC and ArchUnit tests for ShopLite</description>
 
     <properties>
         <maven.compiler.release>21</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <junit.version>5.11.4</junit.version>
+        <junit.version>5.14.4</junit.version>
         <rest-assured.version>5.5.0</rest-assured.version>
         <assertj.version>3.26.3</assertj.version>
         <jackson.version>2.18.2</jackson.version>
         <karate.version>1.5.0</karate.version>
         <sqlite-jdbc.version>3.47.1.0</sqlite-jdbc.version>
+        <archunit.version>1.5.1</archunit.version>
 
         <!-- Which JUnit tags to run, e.g. -Dgroups=api -->
         <groups></groups>
     </properties>
 
+    <!-- One JUnit version for every module: ArchUnit's test engine needs JUnit Platform 1.14,
+         and mixed platform versions fail at runtime. -->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.junit</groupId>
+                <artifactId>junit-bom</artifactId>
+                <version>${junit.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <dependencies>
+        <dependency>
+            <groupId>com.tngtech.archunit</groupId>
+            <artifactId>archunit-junit5</artifactId>
+            <version>${archunit.version}</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>

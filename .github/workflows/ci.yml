@@ -101,7 +101,7 @@ jobs:
           retention-days: 7
 
   api-java:
-    name: API + data (REST Assured, Karate, JDBC)
+    name: API, data & architecture (REST Assured, Karate, JDBC, ArchUnit)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
