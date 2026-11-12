@@ -69,6 +69,8 @@ input, select {
 
 .form { max-width: 380px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; display: flex; flex-direction: column; gap: 16px; }
 
+/* Wide tables scroll inside their own box on small screens instead of widening the page. */
+.table-scroll { max-width: 100%; overflow-x: auto; }
 table { width: 100%; border-collapse: collapse; background: var(--surface); }
 th, td { text-align: left; padding: 10px; border-bottom: 1px solid var(--border); }
 td input[type=number] { width: 72px; }
@@ -83,3 +85,12 @@ td input[type=number] { width: 72px; }
 
 .site-footer { text-align: center; padding: 24px; color: var(--muted); font-size: .9rem; }
 .hidden { display: none !important; }
+
+/* Phone overrides that must come after the base table and nav rules. */
+@media (max-width: 640px) {
+  th, td { padding: 8px 6px; }
+  td input[type=number] { width: 56px; }
+  /* Unit price is also on the product page; the line total stays visible. */
+  .col-price { display: none; }
+  .site-nav ul { gap: 10px; flex-wrap: wrap; }
+}

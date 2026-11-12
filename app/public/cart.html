@@ -29,13 +29,15 @@
     <p class="hidden" data-testid="cart-empty">Your cart is empty. <a href="/">Browse products</a>.</p>
     <section class="hidden" data-testid="cart-contents" aria-labelledby="cart-heading">
       <h2 id="cart-heading" class="hidden">Items</h2>
+      <div class="table-scroll" role="region" aria-label="Items in your cart" tabindex="0">
       <table>
         <caption class="hidden">Items in your cart</caption>
         <thead>
-          <tr><th scope="col">Product</th><th scope="col">Price</th><th scope="col">Quantity</th><th scope="col">Line total</th><th scope="col"><span class="hidden">Actions</span></th></tr>
+          <tr><th scope="col">Product</th><th scope="col" class="col-price">Price</th><th scope="col">Quantity</th><th scope="col">Line total</th><th scope="col"><span class="hidden">Actions</span></th></tr>
         </thead>
         <tbody data-testid="cart-items"></tbody>
       </table>
+      </div>
       <div class="totals">
         <div><span>Subtotal</span><span data-testid="cart-subtotal"></span></div>
         <div><span>Shipping</span><span data-testid="cart-shipping"></span></div>

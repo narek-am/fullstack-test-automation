@@ -15,6 +15,7 @@ function row(item) {
   name.append(link);
 
   const price = document.createElement('td');
+  price.className = 'col-price';
   price.textContent = formatPrice(item.unitPriceCents);
 
   const qty = document.createElement('td');
