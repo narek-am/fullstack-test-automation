@@ -350,6 +350,44 @@ jobs:
           path: performance-tests/lighthouse/results/
           retention-days: 7
 
+  accessibility:
+    name: Accessibility (axe-core, keyboard, Pa11y)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: |
+            app/package-lock.json
+            e2e/playwright/package-lock.json
+            accessibility-tests/package-lock.json
+      - run: npm ci --omit=dev
+        working-directory: app
+      - run: npm ci
+        working-directory: e2e/playwright
+      - run: npx playwright install --with-deps chromium
+        working-directory: e2e/playwright
+      - name: axe-core scans and keyboard tests (Playwright)
+        run: npx playwright test --project=a11y
+        working-directory: e2e/playwright
+      - run: npm ci
+        working-directory: accessibility-tests
+        env:
+          PUPPETEER_SKIP_DOWNLOAD: "true"
+      - name: Pa11y CI (HTML_CodeSniffer + axe)
+        run: npm test
+        working-directory: accessibility-tests
+        env:
+          CHROME_PATH: /usr/bin/google-chrome
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: accessibility-report
+          path: e2e/playwright/playwright-report/
+          retention-days: 7
+
   ui-playwright:
     name: UI (Playwright, 3 browsers)
     runs-on: ubuntu-latest

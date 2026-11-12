@@ -1,0 +1,15 @@
+{
+  "name": "shoplite-accessibility-tests",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Pa11y CI accessibility scans of ShopLite (HTML_CodeSniffer and axe runners)",
+  "scripts": {
+    "start:app": "node scripts/start-app.mjs 3501",
+    "pa11y": "pa11y-ci --config pa11yci.config.js",
+    "test": "start-server-and-test start:app http://127.0.0.1:3501/api/health pa11y"
+  },
+  "devDependencies": {
+    "pa11y-ci": "5.0.0",
+    "start-server-and-test": "2.0.9"
+  }
+}

@@ -78,7 +78,7 @@ pipeline {
                     steps {
                         dir('e2e/playwright') {
                             // Screenshot project (visual) needs a macOS agent; functional projects run anywhere
-                            sh 'npm ci && npx playwright install chromium firefox webkit && npx playwright test --project=chromium --project=firefox --project=webkit'
+                            sh 'npm ci && npx playwright install chromium firefox webkit && npx playwright test --project=chromium --project=firefox --project=webkit --project=a11y'
                         }
                     }
                     post {
@@ -86,6 +86,12 @@ pipeline {
                             junit allowEmptyResults: true, testResults: 'e2e/playwright/test-results/junit.xml'
                             archiveArtifacts allowEmptyArchive: true, artifacts: 'e2e/playwright/playwright-report/**'
                         }
+                    }
+                }
+                stage('Pa11y') {
+                    steps {
+                        // Uses the agent's Google Chrome; set CHROME_PATH if it is not on the default path
+                        dir('accessibility-tests') { sh 'PUPPETEER_SKIP_DOWNLOAD=true npm ci && npm test' }
                     }
                 }
                 stage('Cypress') {
