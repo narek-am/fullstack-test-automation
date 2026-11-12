@@ -87,15 +87,26 @@ job summary.
     the TLS-terminating proxy in a real deployment.
   - *10202 Absence of Anti-CSRF Tokens*: ShopLite authenticates with a bearer token in the
     `Authorization` header, not cookies, so a cross-site form post carries no credentials.
-  - *10109 Modern Web Application*: informational only ("this site uses JavaScript").
+  - *10109 Modern Web Application*, *10111 Authentication Request Identified* and
+    *10049 Storable and Cacheable Content*: informational only, no risk on their own.
 - Everything else is reported as a **warning** to review.
+
+### Triage of the first scan
+
+| ZAP alert | Decision |
+|-----------|----------|
+| 10024 Sensitive Information in URL: `/login?email=…&password=…` | **Real bug, fixed.** The login form had no `method`, so without JavaScript it submitted as GET. Now `method="post"`, a static test guards it, and the rule is FAIL. |
+| 90004 Cross-Origin-Embedder-Policy missing (Low) | **Fixed.** Added `COEP: require-corp`; the rule is now FAIL. |
+| 10031 User Controllable HTML Element Attribute | Kept as a warning. The search box is filled from `?search=` through the DOM `value` property, never HTML, and the XSS tests cover it. |
+| 10027 Suspicious Comments | Kept as a warning. The match is the comment "textContent, never innerHTML" in `products.js`. |
+| 10049, 10111 | Informational, now ignored. |
 
 The API tests above check the same headers in-process on every request type; ZAP is the
 independent, black-box check of the running app.
 
 ## Bugs these tests found
 
-Writing these tests found three real problems in ShopLite, all fixed in separate commits:
+The tests and scans found four real problems in ShopLite, each fixed in its own commit:
 
 1. `?search=a&search=b` and `?category=a&category=b` crashed with **500**: Express turns repeated
    parameters into arrays, and SQLite can't bind an array.
@@ -103,3 +114,5 @@ Writing these tests found three real problems in ShopLite, all fixed in separate
    inherited object property, which then ended up in `ORDER BY`.
 3. `/api/products/0x01` returned product 1: `Number()` accepts hex, exponent and padded strings.
    Now only plain decimal digits are accepted.
+4. The login form had no `method="post"` (found by ZAP): without JavaScript, the password went
+   into the URL.
