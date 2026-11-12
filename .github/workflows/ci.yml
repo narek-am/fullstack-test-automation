@@ -226,6 +226,9 @@ jobs:
           install -m 755 talisman_linux_amd64 /usr/local/bin/talisman
       - name: Scan the git history for secrets
         run: talisman --scan
+      - name: Report Talisman findings
+        if: always()
+        run: node security-tests/scripts/talisman-summary.mjs talisman_report
       - uses: actions/upload-artifact@v4
         if: always()
         with:
