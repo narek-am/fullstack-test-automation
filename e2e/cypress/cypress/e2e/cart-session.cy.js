@@ -72,7 +72,9 @@ describe('Session expiry', () => {
     cy.intercept('GET', '/api/cart', { statusCode: 401, body: { error: 'Invalid or expired token' } }).as('cart');
     cy.visit('/cart');
     cy.wait('@cart');
-    cy.byTestId('message').should('contain.text', 'Invalid or expired token');
+    cy.location('pathname').should('eq', '/login');
+    cy.location('search').should('eq', '?next=%2Fcart&expired=1');
+    cy.byTestId('message').should('have.text', 'Your session has expired. Please log in again.');
     cy.window().its('localStorage').invoke('getItem', 'shoplite.token').should('be.null');
   });
 });

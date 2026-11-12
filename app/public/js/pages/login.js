@@ -29,4 +29,8 @@ form.addEventListener('submit', async (event) => {
   }
 });
 
+if (new URLSearchParams(window.location.search).get('expired') === '1') {
+  showMessage('Your session has expired. Please log in again.');
+}
+
 initLayout();
