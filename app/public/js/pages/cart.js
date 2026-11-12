@@ -21,6 +21,7 @@ function row(item) {
   const qty = document.createElement('td');
   const input = document.createElement('input');
   input.type = 'number';
+  input.inputMode = 'numeric'; // number pad on phones
   input.min = '1';
   input.max = String(item.stock);
   input.value = String(item.quantity);
