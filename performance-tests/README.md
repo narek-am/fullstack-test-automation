@@ -115,5 +115,10 @@ cd performance-tests && npm ci && npm run lighthouse   # starts its own app on p
 **Found by Lighthouse:** the home and product pages had a layout shift of 0.059 and 0.072. The
 footer was drawn under the still-empty page and jumped down when JavaScript added the content.
 A sticky-footer layout fixed it; the screenshot baselines were updated in the same commit.
+On the Linux CI runner the home page still measured 0.121: Chrome on Linux draws a scrollbar that
+takes up width, so when the products made the page scrollable, the whole page moved sideways in the
+same frame as the footer. `scrollbar-gutter: stable` reserves that space from the start (0.016 on CI).
+The screenshot tests turn the gutter off while capturing, because whether scrollbars take space
+depends on the machine (macOS hides them with a trackpad, as on the Mac that made the baselines).
 To check that a budget fails, add 20 KB to `app/public/css/styles.css`: all three pages fail on
 `resource-summary.stylesheet.size` (26 KB found, 15 KB allowed).
