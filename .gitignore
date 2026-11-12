@@ -40,3 +40,5 @@ osv-report.*
 performance-tests/**/results/
 performance-tests/**/target/
 performance-tests/**/.lighthouseci/
+cfr-tests/test-results/
+cfr-tests/playwright-report/
