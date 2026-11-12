@@ -232,6 +232,10 @@ jobs:
           PUPPETEER_SKIP_DOWNLOAD: "true"
       - run: npm test
         working-directory: visual-tests/backstop
+      - name: Report visual diffs as annotations
+        if: failure()
+        run: node scripts/annotate-failures.mjs
+        working-directory: visual-tests/backstop
       - uses: actions/upload-artifact@v4
         if: always()
         with:
