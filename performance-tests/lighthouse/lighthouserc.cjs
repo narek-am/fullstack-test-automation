@@ -15,8 +15,9 @@ module.exports = {
       settings: {
         preset: 'desktop',
         chromeFlags: '--headless=new --no-sandbox',
-        // No PWA or SEO checks: this is a performance gate. Accessibility has its own suite.
-        onlyCategories: ['performance', 'best-practices'],
+        // No PWA or SEO checks. The accessibility score is a third opinion next to the axe-core
+        // (Playwright) and Pa11y suites in accessibility-tests/.
+        onlyCategories: ['performance', 'best-practices', 'accessibility'],
       },
     },
     assert: {
@@ -25,6 +26,7 @@ module.exports = {
         // Overall scores
         'categories:performance': ['error', { minScore: 0.95 }],
         'categories:best-practices': ['error', { minScore: 0.95 }],
+        'categories:accessibility': ['error', { minScore: 1 }],
 
         // Core Web Vitals and loading metrics (desktop, simulated throttling)
         'first-contentful-paint': ['error', { maxNumericValue: 1000 }],
