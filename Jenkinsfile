@@ -70,7 +70,8 @@ pipeline {
                 stage('Playwright') {
                     steps {
                         dir('e2e/playwright') {
-                            sh 'npm ci && npx playwright install chromium firefox webkit && npx playwright test'
+                            // Screenshot project (visual) needs a macOS agent; functional projects run anywhere
+                            sh 'npm ci && npx playwright install chromium firefox webkit && npx playwright test --project=chromium --project=firefox --project=webkit'
                         }
                     }
                     post {

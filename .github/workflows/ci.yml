@@ -171,7 +171,7 @@ jobs:
         working-directory: e2e/playwright
       - run: npx playwright install --with-deps chromium firefox webkit
         working-directory: e2e/playwright
-      - run: npx playwright test
+      - run: npx playwright test --project=chromium --project=firefox --project=webkit
         working-directory: e2e/playwright
       - uses: actions/upload-artifact@v4
         if: always()
@@ -243,4 +243,32 @@ jobs:
           path: |
             visual-tests/backstop/backstop_data/html_report/
             visual-tests/backstop/backstop_data/bitmaps_test/
+          retention-days: 7
+
+  visual-playwright:
+    name: Visual (Playwright screenshots)
+    # Baselines are stored per platform (*-darwin.png) and approved on macOS.
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: |
+            app/package-lock.json
+            e2e/playwright/package-lock.json
+      - run: npm ci
+        working-directory: app
+      - run: npm ci
+        working-directory: e2e/playwright
+      - run: npx playwright install chromium
+        working-directory: e2e/playwright
+      - run: npx playwright test --project=visual
+        working-directory: e2e/playwright
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-visual-diffs
+          path: e2e/playwright/test-results/
           retention-days: 7

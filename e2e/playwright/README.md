@@ -25,12 +25,33 @@ Browser tests for the ShopLite web UI, run in **Chromium, Firefox and WebKit**.
 | `cart.spec.ts` | Add to cart, totals and shipping, free-shipping threshold, change quantity, stock limit enforced by the form, remove item |
 | `checkout.spec.ts` | Full journey with `test.step`: log in → search → add → place order → order history; stock reduced after an order |
 
+## Visual tests (screenshot comparison)
+
+The `visual` project (`visual/pages.visual.spec.ts`, Chromium, own app instance) compares
+screenshots with approved baselines in `visual/__screenshots__/` using `toHaveScreenshot`:
+
+- **Full pages** with **masked dynamic data**: stock counts are covered so a purchase doesn't break the test
+- **Components**: product card, sold-out card, filter bar, header (logged out / in), error and success banners, cart totals
+- **Interaction states** of the primary button: default, hover, keyboard focus (`:focus-visible`), disabled.
+  The focus shot captures the surrounding form, since the outline is drawn outside the button.
+- Animations disabled and caret hidden; zero differing pixels allowed (per-pixel colour tolerance 0.2)
+
+Regression check: removing the focus outline from the CSS fails the focus-state test (588 pixels)
+while the other 9 tests pass.
+
+Baselines are platform-specific (`*-darwin.png`), so CI runs this project on a macOS runner.
+
+```bash
+npm run test:visual          # compare with baselines
+npm run test:visual:update   # approve the current UI as the new baseline (after an intended change)
+```
+
 ## Run
 
 ```bash
 npm install
 npx playwright install --with-deps
-npm test                  # all three browsers
+npm test                  # functional tests in all three browsers
 npm run test:chromium     # one browser
 npm run test:headed       # watch it run
 npm run test:ui           # Playwright UI mode
