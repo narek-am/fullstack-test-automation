@@ -32,8 +32,18 @@ for (const file of reports) {
   }
 }
 
+// GitHub shows at most 10 annotations of each level per step, so group the findings by file.
+const byFile = new Map();
 for (const r of rows) {
-  console.log(`::${r.level} file=${r.file},title=Talisman ${r.type} (${r.severity})::${r.message} [commits: ${r.commits}]`);
+  const key = `${r.level}|${r.file}`;
+  byFile.set(key, [...(byFile.get(key) ?? []), r]);
+}
+const groups = [...byFile.values()].sort((a, b) => (a[0].level === 'error' ? -1 : 1) - (b[0].level === 'error' ? -1 : 1));
+for (const findings of groups) {
+  const [{ level, file }] = findings;
+  const kinds = [...new Set(findings.map((f) => `${f.type} (${f.severity})`))].join(', ');
+  const first = findings[0].message.slice(0, 160);
+  console.log(`::${level} file=${file},title=Talisman: ${findings.length} finding(s) in ${file}::${kinds}. First: ${first}`);
 }
 const table = [
   `## Talisman: ${rows.filter((r) => r.level === 'error').length} failures, ${rows.filter((r) => r.level === 'warning').length} warnings`,

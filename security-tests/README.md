@@ -69,6 +69,13 @@ private key files, tokens, high-entropy strings and the extra patterns in
 The demo accounts' passwords are allowed explicitly in `.talismanrc`: they are seeded test data,
 documented on purpose so the suites can log in.
 
+The first history scan failed on low-severity name heuristics only: `passwords.test.js`, the
+`*.sql` data checks and lines like `it('verifies the right password…')`. Instead of ignoring those
+files (which would also hide a real key added to them later), `.talismanrc` sets
+`threshold: medium`. Low-severity matches are reported as warnings; keys, tokens, private key
+files, high-entropy strings and the custom patterns stay high severity and fail the build.
+`.env` files are raised to high, because a committed `.env` usually holds real secrets.
+
 ## OWASP ZAP baseline scan (CI job `security-zap`)
 
 CI starts ShopLite and runs the [ZAP baseline scan](https://www.zaproxy.org/docs/docker/baseline-scan/)

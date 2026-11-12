@@ -2,6 +2,13 @@
 # secrets: keys, tokens, private key files, high-entropy strings. Run it as a pre-commit hook
 # (security-tests/scripts/install-talisman-hook.sh); CI scans the whole git history.
 version: "1.0"
+# Low-severity heuristics (file names containing "password", *.sql files, lines that mention a
+# password) are reported as warnings. Keys, tokens, private key files, high-entropy strings and
+# the custom patterns below are high severity and fail the build.
+threshold: medium
+custom_severities:
+  - detector: EnvFile   # a committed .env file almost always holds real secrets
+    severity: high
 scopeconfig:
   - scope: node     # integrity hashes in package-lock.json look like secrets but are not
   - scope: images   # screenshot baselines are binary files
